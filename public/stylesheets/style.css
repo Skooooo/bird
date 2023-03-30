@@ -1,0 +1,326 @@
+* {
+    background-color: #dcdcdc;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+body {
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+    color: #00B7FF;
+}
+
+.begin{
+    height: 150px;
+    text-align: left;
+    align-items: center;
+    display: flex;
+    font-size: 20px;
+    background-color: #77a271;
+    background-image: url("/images/bird_header.jpg");
+    background-repeat: no-repeat;
+    background-size: 100% 25%;
+    background-attachment: fixed;
+}
+
+.begin .left{
+    margin-left: 30px;
+    float: left;
+}
+
+.bntline .left{
+    float: left;
+    background-color: inherit;
+}
+
+.right{
+    background-color: inherit;
+    float: right;
+}
+
+.clear{
+    clear: both;
+}
+
+.fbutton {
+    border-style: none;
+    cursor: pointer;
+    padding: 8px 10px;
+    text-decoration: none;
+    background-color: #6b9b4c;
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.subheader{
+    background-color: inherit;
+}
+
+.bntline{
+    background-color: #6b9b4c;
+}
+
+.text_bnt{
+    border: none;
+    padding: 10px 18px;
+    font-size: 16px;
+    cursor: pointer;
+    display: inline-block;
+    color: white;
+    background-color: inherit;
+}
+
+.text_bnt:hover{
+    background-color: #385128;
+}
+
+.sub_body{
+    min-height: 80vh;
+    min-width: 100vh;
+    overflow: auto;
+}
+
+.footer{
+    height: 100px;
+    background-color: #6b9b4c;
+}
+
+.column{
+    float: left;
+    width: 32%;
+    margin-bottom: 10px;
+    padding: 4px 8px;
+}
+
+.row{
+    margin: 5px;
+}
+
+.single_card{
+    padding: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    height: 150px;
+    display: flex;
+}
+
+.single_card::after, .row::after{
+    clear: both;
+    display: table;
+}
+
+.bird_information{
+    display: flex;
+    align-items: center;
+}
+
+.container{
+    display: block;
+}
+
+.bird_link{
+    font-size: 15px;
+    padding: 10px;
+}
+
+.bird_details{
+    font-size: 14px;
+    padding: 10px;
+}
+
+@media screen and (max-width: 1250px){
+    .column{
+        width: 48%;
+    }
+}
+
+@media screen and (max-width: 840px){
+    .column{
+        width: 99%;
+    }
+}
+
+.bird_table{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+}
+
+.bird_table, th, td{
+    border: 1px solid black;
+    border-collapse: collapse;
+    text-align: center;
+    padding: 10px 25px;
+}
+
+tr th{
+    background-color: rgb(190, 189, 189);
+}
+
+.col1{
+    min-width: 50vh;
+}
+
+.col2{
+    min-width: 30vh;
+}
+
+.name_label{
+    display: block;
+    background-color: rgb(181, 81, 81);
+    padding: 8px 12px;
+    color: white;
+    min-width: 50px;
+    border: none;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.div_left{
+    float: left;
+    width: 49%;
+}
+
+.div_right{
+    float: right;
+    width: 49%;
+}
+
+.chatroom{
+    height: 50vh;
+    border: 1px solid black;
+    margin-bottom: 5px;
+}
+
+.chatroom #chat{
+    min-height: 100px;
+    overflow: auto;
+    background-color: #dadada;
+}
+
+.chatroom .header{
+    background-color: rgb(181, 181, 181);
+    justify-content: center;
+    display: flex;
+    padding: 5px;
+}
+
+.part{
+    padding: 8px 10px;
+    display: block;
+}
+
+.title{
+    background-color: #6b9b4c;
+    font-weight: bold;
+    font-size: 18px;
+    color: white;
+    border-radius: 8px;
+    border: none;
+    padding: 8px 13px;
+    min-width: 80px;
+}
+
+#map{
+    margin: 10px;
+    height: 50vh;
+}
+
+.text_area p{
+    min-height: 120px;
+    background-color: antiquewhite;
+}
+
+
+#add_modal{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 2;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal{
+    background: rgba(253, 240, 240, 1);
+    padding: 10px 0px 20px 0px;
+    border-radius: 5px;
+    min-width: 350px;
+    text-align: center;
+    overflow: auto;
+}
+
+.top_form {
+    background: inherit;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.top_form #close_modal {
+    background: inherit;
+    cursor: pointer;
+    padding: 0 20px;
+    font-size: 20px;
+}
+
+.add{
+    justify-content: center;
+    text-align: center;
+    background-color: rgba(253, 240, 240, 1);
+}
+
+.add_form h2{
+    margin-top: 3px;
+    margin-bottom: 20px;
+    background-color: inherit;
+}
+
+.input1 {
+    border: 1px solid darkgrey;
+    padding: 10px 0px;
+    min-width: 380px;
+    background-color: inherit;
+}
+
+.label1 {
+    padding-left: 40px;
+    background-color: inherit;
+    font-weight: bold;
+}
+
+#addbtn{
+    border-style: none;
+    cursor: pointer;
+    padding: 8px 20px;
+    text-decoration: none;
+    border-radius: 8px;
+    background-color: inherit;
+    color: black;
+    margin: 10px auto;
+    font-weight: bold;
+}
+
+#addbtn:hover{
+    background-color: darkslategray;
+    color: white;
+}
+
+.add_form form input{
+    width: 75%;
+    margin-bottom: 10px;
+    padding: 8px 10px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    background-color: rgba(253, 240, 240, 1);;
+}
+
+.add_table tr td{
+    border: none;
+    background-color: rgba(253, 240, 240, 1);
+}

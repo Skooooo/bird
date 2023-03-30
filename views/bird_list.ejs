@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"/>
+</head>
+<body>
+<%- include('../views/partials/header.ejs') %>
+
+<div class="sub_body">
+    <div id="bird_card" class="row">
+        <div class="column"> 
+            <div class="single_card">
+                <div class="bird_image">
+                    <img src="/images/cute_Bird.jpg" alt="bird image" style="height: 100%;">
+                </div>
+                <div class="bird_information">
+                    <div class="container">
+                        <a class="bird_link" href="/detail">Bird Name</a>
+                        <p class="bird_details">Created by: {author name}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="column"> 
+            <div class="single_card">
+                <div class="bird_image">
+                    <img src="/images/cute_Bird.jpg" alt="bird image" style="height: 100%;">
+                </div>
+                <div class="bird_information">
+                    <div class="container">
+                        <a class="bird_link" href="/detail">Bird Name</a>
+                        <p class="bird_details">Created by: {author name}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="column"> 
+            <div class="single_card">
+                <div class="bird_image">
+                    <img src="/images/cute_Bird.jpg" alt="bird image" style="height: 100%;">
+                </div>
+                <div class="bird_information">
+                    <div class="container">
+                        <a class="bird_link" href="/detail">Bird Name</a>
+                        <p class="bird_details">Created by: {author name}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="column"> 
+            <div class="single_card">
+                <div class="bird_image">
+                    <img src="/images/cute_Bird.jpg" alt="bird image" style="height: 100%;">
+                </div>
+                <div class="bird_information">
+                    <div class="container">
+                        <a class="bird_link" href="/detail">Bird Name</a>
+                        <p class="bird_details">Created by: {author name}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('../views/partials/footer.ejs') %>
+
+</body>
+</html>
