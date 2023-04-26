@@ -1,74 +1,168 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"/>
-</head>
-<body>
-<%- include('../views/partials/header.ejs') %>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
+  </head>
+  <body>
+    <%- include('../views/partials/header.ejs') %>
 
-<div class="sub_body">
-    <div id="bird_card" class="row">
-        <div class="column"> 
-            <div class="single_card">
-                <div class="bird_image">
-                    <img src="/images/cute_Bird.jpg" alt="bird image" style="height: 100%;">
-                </div>
-                <div class="bird_information">
-                    <div class="container">
-                        <a class="bird_link" href="/detail">Bird Name</a>
-                        <p class="bird_details">Created by: {author name}</p>
-                    </div>
-                </div>
+    <div class="sub_body">
+      <div class="column">
+        <div class="single_card">
+          <div class="bird_image">
+            <img
+              src="/images/cute_Bird.jpg"
+              alt="bird image"
+              style="height: 100%"
+            />
+          </div>
+          <div class="bird_information">
+            <div class="container">
+              <a class="bird_link" href="/detail">Bird Name</a>
+              <p class="bird_details">Created by: {author name}</p>
             </div>
+          </div>
         </div>
+      </div>
 
-        <div class="column"> 
-            <div class="single_card">
-                <div class="bird_image">
-                    <img src="/images/cute_Bird.jpg" alt="bird image" style="height: 100%;">
-                </div>
-                <div class="bird_information">
-                    <div class="container">
-                        <a class="bird_link" href="/detail">Bird Name</a>
-                        <p class="bird_details">Created by: {author name}</p>
-                    </div>
-                </div>
+      <div class="column">
+        <div class="single_card">
+          <div class="bird_image">
+            <img
+              src="/images/cute_Bird.jpg"
+              alt="bird image"
+              style="height: 100%"
+            />
+          </div>
+          <div class="bird_information">
+            <div class="container">
+              <a class="bird_link" href="/detail">Bird Name</a>
+              <p class="bird_details">Created by: {author name}</p>
             </div>
+          </div>
         </div>
+      </div>
 
-        <div class="column"> 
-            <div class="single_card">
-                <div class="bird_image">
-                    <img src="/images/cute_Bird.jpg" alt="bird image" style="height: 100%;">
-                </div>
-                <div class="bird_information">
-                    <div class="container">
-                        <a class="bird_link" href="/detail">Bird Name</a>
-                        <p class="bird_details">Created by: {author name}</p>
-                    </div>
-                </div>
+      <div class="column">
+        <div class="single_card">
+          <div class="bird_image">
+            <img
+              src="/images/cute_Bird.jpg"
+              alt="bird image"
+              style="height: 100%"
+            />
+          </div>
+          <div class="bird_information">
+            <div class="container">
+              <a class="bird_link" href="/detail">Bird Name</a>
+              <p class="bird_details">Created by: {author name}</p>
             </div>
+          </div>
         </div>
+      </div>
 
-        <div class="column"> 
-            <div class="single_card">
-                <div class="bird_image">
-                    <img src="/images/cute_Bird.jpg" alt="bird image" style="height: 100%;">
-                </div>
-                <div class="bird_information">
-                    <div class="container">
-                        <a class="bird_link" href="/detail">Bird Name</a>
-                        <p class="bird_details">Created by: {author name}</p>
-                    </div>
-                </div>
+      <div class="column">
+        <div class="single_card">
+          <div class="bird_image">
+            <img
+              src="/images/cute_Bird.jpg"
+              alt="bird image"
+              style="height: 100%"
+            />
+          </div>
+          <div class="bird_information">
+            <div class="container">
+              <a class="bird_link" href="/detail">Bird Name</a>
+              <p class="bird_details">Created by: {author name}</p>
             </div>
+          </div>
         </div>
+      </div>
     </div>
-</div>
 
-<%- include('../views/partials/footer.ejs') %>
+    <%- include('../views/partials/footer.ejs') %>
 
-</body>
+    <script>
+      let db;
+
+      const requestIndexedDB = window.indexedDB.open("sighting_list");
+
+      requestIndexedDB.onerror = (event) => {
+        console.error("error detected", event);
+      };
+
+      // If there is an offline database and it opens properly, it means there is data in it
+      requestIndexedDB.onsuccess = (event) => {
+        var db = event.target.result;
+
+        var transaction = db.transaction(["list"], "readwrite");
+
+        var objectStore = transaction.objectStore("list");
+
+        // Here we use a pointer to read the key and value from the database
+        var lowerBoundOpenKeyRange = IDBKeyRange.lowerBound(1, false);
+        var request = objectStore.openCursor(
+          lowerBoundOpenKeyRange,
+          IDBCursor.PREV
+        );
+
+        request.onsuccess = (event) => {
+          var cursor = event.target.result;
+          if (cursor) {
+            // The Object.assign method is used to avoid errors when printing on the console
+            console.log(Object.assign(cursor.value));
+            doFormRequest(cursor.value);
+            cursor.continue();
+          }
+
+          // TODO
+          // If the online link is saved successfully, open the comment below and delete the database
+          //   objectStore.delete("list");
+          // indexedDB.deleteDatabase("sighting_list");
+
+
+          // locals.save === 'failed' ???
+          // locals.save === 'success' ???
+        };
+
+        request.onerror = (event) => {
+          // Error handling!
+        };
+      };
+
+      // This method creates a virtual form element and populates it one by one.
+      // Finally the post method is called to call the online link directly to save the database data
+      function doFormRequest(json) {
+        var form = document.createElement("form");
+        form.action = "/directSave";
+        form.method = "post";
+
+        // append input attribute and value
+        for (var key in json) {
+          if (json.hasOwnProperty(key)) {
+            var val = json[key];
+            input = document.createElement("input");
+            input.type = "hidden"; // Hide not show this element
+            input.name = key;
+            input.value = val;
+
+            // append key-value to form
+            form.appendChild(input);
+          }
+        }
+
+        // send post request
+        document.body.appendChild(form);
+        form.submit();
+
+        // remove form from document
+        document.body.removeChild(form);
+      }
+    </script>
+  </body>
 </html>
