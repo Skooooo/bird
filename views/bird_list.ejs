@@ -111,6 +111,9 @@
           IDBCursor.PREV
         );
 
+        // Check the offline database every time you open bird_list
+        // When the offline database is connected, check to see if there is anything in it
+        // If there is something, it iterate through all the objects and call the doFormRequest method in turn to upload the data to the online database
         request.onsuccess = (event) => {
           var cursor = event.target.result;
           if (cursor) {
@@ -125,7 +128,6 @@
           //   objectStore.delete("list");
           // indexedDB.deleteDatabase("sighting_list");
 
-
           // locals.save === 'failed' ???
           // locals.save === 'success' ???
         };
@@ -137,6 +139,9 @@
 
       // This method creates a virtual form element and populates it one by one.
       // Finally the post method is called to call the online link directly to save the database data
+      // doFormRequest creates a virtual form node, then creates a number of virtual input nodes in it, and then fills the object with the information
+      // Fill in the different input nodes in turn, then submit the virtual form and call the directSave page to upload the data directly
+      // After successful upload, delete the data from the offline database and delete the virtual form
       function doFormRequest(json) {
         var form = document.createElement("form");
         form.action = "/directSave";
