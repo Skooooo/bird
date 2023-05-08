@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
+    <script src="http://maps.googleapis.com/maps/api/js"></script>
+
+    <script>
+      function initialize() {
+        var mapProp = {
+          center: new google.maps.LatLng(51.508742, -0.12085),
+          zoom: 5,
+          mapTypeId: google.maps.MapTypeId.ROADMAP,
+        };
+        var map = new google.maps.Map(document.getElementById("map"), mapProp);
+      }
+      google.maps.event.addDomListener(window, "load", initialize);
+    </script>
+  </head>
+  <body>
+    <%- include('../views/partials/header.ejs') %>
+    <%-include('../views/partials/footer.ejs') %>
+
+    <script>
+      let db;
+      let nickname = "<%- locals.nickname %>";
+      let datetime = "<%- locals.datetime %>";
+      let loc = "<%- locals.loc %>";
+      let description = "<%- locals.description %>";
+      let identification = "<%- locals.identification %>";
+      let img = "<%- locals.img %>";
+
+      console.log("trying to create a sighting_db");
+      const requestIndexedDB = window.indexedDB.open("sighting_list");
+
+      requestIndexedDB.onerror = (event) => {
+        console.error("error detected", event);
+      };
+
+      requestIndexedDB.onsuccess = (event) => {
+        console.log("db opened");
+        db = requestIndexedDB.result;
+      };
+
+      // Here's a scenario
+      // The method onupgradeneeded is called when the database is not opened correctly because it has not been created.
+      // can be created automatically when there is no data, and skipped when there is a database and it has a primary key
+      // This method is a guarantee that you will have an offline database
+      requestIndexedDB.onupgradeneeded = (event) => {
+        console.log("upgradeneeded", event);
+        db = event.target.result; // Database object
+
+        var objectStore;
+        objectStore = db.createObjectStore("list", { keyPath: "nickname" });
+        objectStore.createIndex("datetime", "datetime", { unique: false });
+        objectStore.createIndex("location", "location", { unique: false });
+        objectStore.createIndex("description", "description", {
+          unique: false,
+        });
+        objectStore.createIndex("identification", "identification", {
+          unique: false,
+        });
+        objectStore.createIndex("img", "img", { unique: false });
+
+        console.log("indexed database is created");
+      };
+
+      // Why setTimeout (delayed call function) is used here:
+      // because the database is not necessarily created at the same time as this page is generated (when it is rendered) (when you first come in)
+      // It takes your browser a few milliseconds to create a database, at which point the saved operation relies on the database that has already been generated
+      // To ensure that nothing goes wrong, we delay the save operation by one second
+      setTimeout(() => {
+        // The following points are chain calls
+        const addingItem = db
+          .transaction(["list"], "readwrite")
+          .objectStore("list")
+          .add({
+            nickname: nickname,
+            datetime,
+            location: loc,
+            description,
+            identification,
+            img,
+          });
+
+        addingItem.onsuccess = (event) => {
+          console.log("write success");
+        };
+
+        addingItem.onerror = (event) => {
+          console.log("write error");
+        };
+      }, 1000);
+    </script>
+  </body>
+</html>
