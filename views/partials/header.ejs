@@ -6,7 +6,7 @@
           type="button"
           id="birdSightings"
           value="Bird Sightings"
-          onclick="showlist()"
+          onclick="showwelcome()"
         />
       </label>
     </div>
@@ -144,8 +144,12 @@
       window.location.href = "http://localhost:3000/recent";
     }
   
-    function showlist() {
+    function showwelcome() {
       window.location.href = "http://localhost:3000";
+    }
+
+    function showlist() {
+      window.location.href = "http://localhost:3000/list";
     }
   
     function shownearby() {}

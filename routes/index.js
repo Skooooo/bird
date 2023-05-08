@@ -99,8 +99,8 @@ const imgParser = (file) => {
 /* GET home page. */
 router.get("/", function (req, res) {
   // res.render("bird_list", { title: "Bird List", data: getItems() });
-  res.render("bird_list", {
-    title: "Bird List",
+  res.render("welcome", {
+    title: "Welcome",
     save: saveFlag ? "succes" : "failed",
   });
 });
@@ -147,6 +147,10 @@ router.post("./directSave", (req, res) => {
     // Not sure there is a need for anything here
     console.log("Another attempt to save offline data failed");
   }
+});
+
+router.get("/list", function (req, res) {
+  res.render("bird_list", { title: "List" });
 });
 
 router.get("/recent", function (req, res) {
