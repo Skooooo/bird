@@ -51,6 +51,11 @@ const getItems = async () => {
   return dbData;
 };
 
+// getItems();
+// setTimeout(() => {
+//   console.log(dbData);
+// }, 20000);
+
 let saveFlag = false;
 
 /**
@@ -58,21 +63,19 @@ let saveFlag = false;
  * @return indicate if the function save the data success.
  */
 const createEntry = async (params) => {
-  // const sighting = new Sightings(params);
-  // sighting
-  //   .save()
-  //   .then(() => {
-  //
-  //
-  //     console.log(params?.nickname, "has been successfully added to database");
-  // saveFlag = true
-  //     return true;
-  //   })
-  //   .catch((e) => {
-  //     console.error(e);
-  //     return false;
-  //   });
-  return false;
+  const sighting = new Sightings(params);
+  sighting
+    .save()
+    .then(() => {
+      console.log(params?.nickname, "has been successfully added to database");
+      saveFlag = true;
+      return true;
+    })
+    .catch((e) => {
+      console.error(e);
+      return false;
+    });
+  // return false;
 };
 
 /**
@@ -82,6 +85,7 @@ const createEntry = async (params) => {
  */
 const imgParser = (file) => {
   const filePath = path.resolve(file); // get file exact path no matter which OS
+
   const fileMimeType = mime.getType(filePath); // get file type. eg: image
 
   // if the file not the image file consle the prompt
@@ -119,10 +123,14 @@ router.post("/", (req, res) => {
     identification,
     img: imgData,
   };
+
+  // If createEntry returns false here, the database write failed and we need to go to the dbfailed page
+  // If createEntry returns true it means success, you need to write a db_success page
   if (createEntry(savingData)) {
     // TODO
     // Since I don't know what this success page looks like, I didn't write it, so I'll use this instead
     res.render("db_failed", { title: "success", savingData: savingData });
+    // res.render("db_success", { title: "success", savingData: savingData });
   } else {
     res.render("db_failed", { title: "Bad Request xxxxxxxx", ...savingData });
   }
@@ -145,6 +153,7 @@ router.post("./directSave", (req, res) => {
   } else {
     // TODO
     // Not sure there is a need for anything here
+    // alert('saving failed')
     console.log("Another attempt to save offline data failed");
   }
 });
