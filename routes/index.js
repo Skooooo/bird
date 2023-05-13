@@ -14,12 +14,12 @@ const Schema = mongoose.Schema;
 
 // init database schema
 const sightingSchema = new Schema({
-  nickname: { type: "string", default: "nickname" },
-  dateTime: { type: "string", default: "dateTime" },
-  location: { type: "string", default: "location" },
-  description: { type: "string", default: "description" },
-  identification: { type: "string", default: "identification" },
-  img: { type: "string", default: "base64Img" },
+  nickname: { type: "string", default: "nickname", required: true },
+  dateTime: { type: "string", default: "dateTime", required: true },
+  location: { type: "string", default: "location", required: true },
+  description: { type: "string", default: "description", required: true },
+  identification: { type: "string", default: "identification", required: true },
+  img: { type: "string", default: "base64Img", required: true },
 });
 
 // connting to database
@@ -103,8 +103,8 @@ const imgParser = (file) => {
 /* GET home page. */
 router.get("/", function (req, res) {
   // res.render("bird_list", { title: "Bird List", data: getItems() });
-  res.render("bird_list", {
-    title: "Bird List",
+  res.render("welcome", {
+    title: "Welcome",
     save: saveFlag ? "succes" : "failed",
   });
 });
@@ -164,6 +164,10 @@ router.get("/recent", function (req, res) {
 
 router.get("/detail", function (req, res) {
   res.render("bird_details", { title: "Details" });
+});
+
+router.get("/list", function (req, res) {
+  res.render("bird_list", { title: "List" });
 });
 
 router.use(express.static("public"));

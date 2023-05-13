@@ -1,155 +1,127 @@
-<header class="begin">
-    <div class="left">
-      <label for="birdSightings">
-        <input
-          class="fbutton"
-          type="button"
-          id="birdSightings"
-          value="Bird Sightings"
-          onclick="showlist()"
-        />
-      </label>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+  integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+  integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+  integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<nav class="navbar navbar-expand-lg bg-light navbar-light justify-content-between">
+  <div class="container">
+    <h1 class="navbar-brand mb-0 h1">Bird Sightings</h1>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-end" id="menu">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a href="/list" class="nav-link">List</a>
+        </li>
+        <li class="nav-item">
+          <a href="/recent" class="nav-link">Recent</a>
+        </li>
+        <li class="nav-item">
+          <a href="/nearby" class="nav-link">Nearby</a>
+        </li>
+      </ul>
+      <div class=" d-flex align-items-center">
+        <button type="button" class="btn btn-primary me-3" data-toggle="modal" data-target="#add_modal" id="addbtn">Add
+          a Sighting</button>
+      </div>
     </div>
-    <div class="clear"></div>
-  </header>
-  
-  <header class="subheader">
-    <div class="bntline">
-      <div class="left">
-        <button class="text_bnt" id="sighting_list" onclick="showlist()">
-          Sighting List
-        </button>
-        <button class="text_bnt" id="recent" onclick="showrecent()">
-          Recent
-        </button>
-        <button class="text_bnt" id="nearby" onclick="shownearby()">
-          Nearby
-        </button>
-      </div>
-      <div class="right">
-        <button class="text_bnt" id="add" onclick="addsighting()">
-          Add a sighting
-        </button>
-        <button class="text_bnt" id="update" onclick="updatesight()">
-          Update identification
+  </div>
+</nav>
+
+
+<!-- Modal -->
+<div class="modal fade" id="add_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Add a Sighting</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="clear"></div>
-    </div>
-  </header>
-  
-  <div id="add_modal">
-    <div class="modal">
-      <div class="top_form">
-        <div id="close_modal">
-          <span class="material-symbols-outlined" style="background: inherit"
-            >close</span
-          >
-        </div>
-      </div>
-      <div class="add_form" style="background-color: rgba(253, 240, 240, 1)">
-        <h2 style="background-color: inherit">Add a sighting</h2>
-        <form action="#" class="add" method="post">
-          <table class="add_table" style="background-color: inherit">
-            <tr>
-              <td><label class="label1" for="nickname">Nickname</label></td>
-              <td>
-                <input class="input1" type="text" id="nickname" name="nickname" />
-              </td>
-            </tr>
-            <tr>
-              <td><label class="label1" for="datetime">Date/Time</label></td>
-              <td>
-                <input
-                  class="input1"
-                  type="datetime-local"
-                  id="datetime"
-                  name="datetime"
-                />
-              </td>
-            </tr>
-            <tr>
-              <td><label class="label1" for="location">Location</label></td>
-              <td>
-                <input class="input1" type="text" id="location" name="location" />
-              </td>
-            </tr>
-            <tr>
-              <td><label class="label1" for="description">Description</label></td>
-              <td>
-                <textarea
-                  class="input1"
-                  type="text"
-                  id="description"
-                  name="description"
-                  rows="6"
-                  cols="50"
-                ></textarea>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label class="label1" for="identification">Identification</label>
-              </td>
-              <td>
-                <input
-                  class="input1"
-                  type="text"
-                  id="identification"
-                  name="identification"
-                />
-              </td>
-            </tr>
-            <tr>
-              <td><label class="label1" for="img">Select image: </label></td>
-              <td>
-                <input
-                  class="input1"
-                  type="file"
-                  id="img"
-                  name="img"
-                  accept="images/*"
-                />
-              </td>
-            </tr>
-          </table>
-          <input type="submit" value="Submit" />
-          <!-- <button type="button" id="addbtn" onclick="addsighting()">
-            Submit
-          </button> -->
+      <div class="modal-body">
+        <form>
+          <div class="form-group row">
+            <label for="nickname" class="col-sm-3 col-form-label text-right">Nickname:</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="nickname" placeholder="nickname">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="datetime" class="col-sm-3 col-form-label text-right">Date/Time:</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="datetime" placeholder="datetime">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="location" class="col-sm-3 col-form-label text-right">Location:</label>
+            <div class="col-sm-3">
+              <button type="button" class="form-control" id="location"
+                style="background: #334662e1; color: #ffffff; font-weight: bold;">Locate</button>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="description" class="col-sm-3 col-form-label text-right">Description:</label>
+            <div class="col-sm-9">
+              <textarea class="form-control" id="description" rows="3"></textarea>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="identification" class="col-sm-3 col-form-label text-right">Identification:</label>
+            <div class="col-sm-9">
+              <textarea class="form-control" id="identification" rows="3"></textarea>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="image" class="col-sm-3 col-form-label text-right">Image:</label>
+            <div class="col-sm-9">
+              <input type="file" class="form-control-file" id="image">
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
         </form>
       </div>
     </div>
   </div>
-  
-  <script>
-    var addmodal = document.getElementById("add_modal");
-    var closemodal = document.getElementById("close_modal");
-    var add = document.getElementById("add");
-    add.onclick = function () {
-      addmodal.style.display = "flex";
-    };
-  
-    closemodal.onclick = function () {
-      addmodal.style.display = "none";
-    };
-  
-    window.onclick = function (event) {
-      if (event.target == addmodal) {
-        addmodal.style.display = "none";
+</div>
+
+<script>
+  $('#addbtn').on('click', function (event) {
+    $('add_modal').modal('show')
+  });
+
+  $('#location').on('click', function (event) {
+    const findlocation = () => {
+      const success = (position) => {
+        console.log(position)
       }
-    };
-  
-    function showrecent() {
-      window.location.href = "http://localhost:3000/recent";
+
+      const error = () => {
+        console.log("Unable to locate")
+      }
+
+      navigator.geolocation.getCurrentPosition(success, error);
     }
-  
-    function showlist() {
-      window.location.href = "http://localhost:3000";
-    }
-  
-    function shownearby() {}
-  
-    function addsighting() {}
-  </script>
-  
+  });
+  // document.querySelector('#location').addEventListener('click', findlocation());
+
+
+  function showrecent() {
+    window.location.href = "http://localhost:3000/recent";
+  }
+
+  function showlist() {
+    window.location.href = "http://localhost:3000";
+  }
+
+  function shownearby() {}
+
+  function addsighting() {}
+</script>
