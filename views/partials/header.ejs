@@ -75,7 +75,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form id="xForm">
+        <form id="xForm" enctype="multipart/form-data" method="POST" action="/add"  onsubmit="return onSubmit();">
           <div class="form-group row">
             <label for="nickname" class="col-sm-3 col-form-label text-right">Nickname:</label>
             <div class="col-sm-9">
@@ -125,6 +125,7 @@
               <input type="file" class="form-control-file" id="myImage" name="myImg" accept="images/*" required>
             </div>
           </div>
+          <div id="message" style="display: none;"></div>
           <input type="submit" value="Add Sighting" id="g" class="btn btn-primary"/>
           <!-- <button type="submit" class="btn btn-primary">Submit</button> -->
         </form>
@@ -132,7 +133,7 @@
     </div>
   </div>
 </div>
-
+<div id="results" class="container mt-2"></div>
 
 <script>
   $('#addbtn').on('click', function (event) {
