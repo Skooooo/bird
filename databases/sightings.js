@@ -1,24 +1,31 @@
+// Include the mongoose library to interact with MongoDB
 var mongoose = require('mongoose');
 
-//The URL which will be queried. Run "mongod.exe" for this to connect
-//var url = 'mongodb://localhost:27017/test';
-var mongoDB = 'mongodb://localhost:27017/sightings';
+// MongoDB URL to connect to
+var mongoDB = 'mongodb://localhost:27017/sightings'; // New URL for the "sightings" database
 
+// Set mongoose to use global Promise library
 mongoose.Promise = global.Promise;
 
+// Connect mongoose to the MongoDB database
 mongoose.connect(mongoDB);
+
+// Get the connection object for the database
 var db = mongoose.connection;
-//Bind connection to error event (to get notification of connection errors)
+
+// Bind the 'error' event to console.error so errors are printed to console
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-//  MORE GENERAL WAY WOULD BE TO CALL:
-// try {
-//     var connection = mongoose.createConnection(mongoDB);
-//     console.log("connection to mongodb worked!");
-// }catch (e) {
-// console.log('error in db connection: ' +e.message)
-// }
-//
-// WHICH WOULD ALLOW MULTIPLE CONNECTIONS
+/*
+More general way to establish connection:
+This method allows for multiple connections, and provides more detailed error info
 
-
+try {
+    // Attempt to create a new connection to the MongoDB database
+    var connection = mongoose.createConnection(mongoDB);
+    console.log("connection to mongodb worked!");  // Log success message
+} catch (e) {
+    // Log any errors that occur during the connection
+    console.log('error in db connection: ' +e.message)
+}
+*/
