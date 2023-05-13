@@ -9,20 +9,30 @@
 <%- include('../views/partials/header.ejs') %>
 
 <div class="sub_body">
-    <table class="bird_table">
-        <tr>
-            <th class="col1">Date/Time</th>
-            <th class="col1">Identification</th>
-            <th class="col2">User</th>
-        </tr>
-        <tr>
-            <td>2023-02-14 19:33:32</td>
-            <td>Unknown</td>
-            <td>Bob</td>
-        </tr>
-    </table>
+    <div id="sightings_card" class="row">
+
+        <% sightings.sort((a, b) => b.dateTimeSeen - a.dateTimeSeen).forEach(function(sighting) { %>
+        <div class="sighting" onclick="window.location.href='/sighting/<%= sighting._id %>'">
+
+            <div class="column">
+                <a href="/sighting/<%= sighting._id %>">
+                    <div class="single_card">
+                        <div class="sighting_image">
+                            <img src="<%= sighting.img %>" alt="sighting image" style="height: 100%;">
+                        </div>
+                        <div class="sighting_info">
+                            <p>Date and Time: <%= sighting.dateTimeSeen.toLocaleString() %></p>
+                            <p>Identification: <%= sighting.identification %></p>
+                            <p>Nickname: <%= sighting.nickname %></p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <% }); %>
+        </div>
+
+    </div>
 </div>
 
-<%- include('../views/partials/footer.ejs') %>
 </body>
 </html>

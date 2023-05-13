@@ -1,155 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="/javascripts/add.js"></script>
+    <script src="/javascripts/indexedDB.js"></script>
+
+</head>
+<body>
+<h1><%= title %></h1>
 <header class="begin">
     <div class="left">
-      <label for="birdSightings">
-        <input
-          class="fbutton"
-          type="button"
-          id="birdSightings"
-          value="Bird Sightings"
-          onclick="showlist()"
-        />
-      </label>
+        <label for="birdSightings">
+            <input
+                    class="fbutton"
+                    type="button"
+                    id="birdSightings"
+                    value="Bird Sightings"
+                    onclick="showlist()"
+            />
+        </label>
     </div>
     <div class="clear"></div>
-  </header>
-  
-  <header class="subheader">
+</header>
+
+<header class="subheader">
     <div class="bntline">
-      <div class="left">
-        <button class="text_bnt" id="sighting_list" onclick="showlist()">
-          Sighting List
-        </button>
-        <button class="text_bnt" id="recent" onclick="showrecent()">
-          Recent
-        </button>
-        <button class="text_bnt" id="nearby" onclick="shownearby()">
-          Nearby
-        </button>
-      </div>
-      <div class="right">
-        <button class="text_bnt" id="add" onclick="addsighting()">
-          Add a sighting
-        </button>
-        <button class="text_bnt" id="update" onclick="updatesight()">
-          Update identification
-        </button>
-      </div>
-      <div class="clear"></div>
-    </div>
-  </header>
-  
-  <div id="add_modal">
-    <div class="modal">
-      <div class="top_form">
-        <div id="close_modal">
-          <span class="material-symbols-outlined" style="background: inherit"
-            >close</span
-          >
+        <div class="left">
+            <button class="text_bnt" id="sighting_list" onclick="showlist()">
+                Sighting List
+            </button>
+            <button class="text_bnt" id="recent" onclick="showrecent()">
+                Recent
+            </button>
+            <button class="text_bnt" id="nearby" onclick="shownearby()">
+                Nearby
+            </button>
         </div>
-      </div>
-      <div class="add_form" style="background-color: rgba(253, 240, 240, 1)">
-        <h2 style="background-color: inherit">Add a sighting</h2>
-        <form action="#" class="add" method="post">
-          <table class="add_table" style="background-color: inherit">
-            <tr>
-              <td><label class="label1" for="nickname">Nickname</label></td>
-              <td>
-                <input class="input1" type="text" id="nickname" name="nickname" />
-              </td>
-            </tr>
-            <tr>
-              <td><label class="label1" for="datetime">Date/Time</label></td>
-              <td>
-                <input
-                  class="input1"
-                  type="datetime-local"
-                  id="datetime"
-                  name="datetime"
-                />
-              </td>
-            </tr>
-            <tr>
-              <td><label class="label1" for="location">Location</label></td>
-              <td>
-                <input class="input1" type="text" id="location" name="location" />
-              </td>
-            </tr>
-            <tr>
-              <td><label class="label1" for="description">Description</label></td>
-              <td>
-                <textarea
-                  class="input1"
-                  type="text"
-                  id="description"
-                  name="description"
-                  rows="6"
-                  cols="50"
-                ></textarea>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label class="label1" for="identification">Identification</label>
-              </td>
-              <td>
-                <input
-                  class="input1"
-                  type="text"
-                  id="identification"
-                  name="identification"
-                />
-              </td>
-            </tr>
-            <tr>
-              <td><label class="label1" for="img">Select image: </label></td>
-              <td>
-                <input
-                  class="input1"
-                  type="file"
-                  id="img"
-                  name="img"
-                  accept="images/*"
-                />
-              </td>
-            </tr>
-          </table>
-          <input type="submit" value="Submit" />
-          <!-- <button type="button" id="addbtn" onclick="addsighting()">
-            Submit
-          </button> -->
-        </form>
-      </div>
+        <div class="right">
+            <button class="text_bnt" id="add" onclick="addsighting()">
+                Add a sighting
+            </button>
+            <button class="text_bnt" id="update" onclick="updatesight()">
+                Update identification
+            </button>
+        </div>
+        <div class="clear"></div>
     </div>
-  </div>
-  
-  <script>
+</header>
+
+<div id="add_modal">
+    <div class="modal">
+        <div class="top_form">
+            <div id="close_modal">
+          <span class="material-symbols-outlined" style="background: inherit"
+          >close</span
+          >
+            </div>
+        </div>
+        <div class="add_form" style="background-color: rgba(253, 240, 240, 1)">
+            <h2 style="background-color: inherit">Add a sighting</h2>
+            <form id="xForm" enctype="multipart/form-data" method="POST" action="/add"  onsubmit="return onSubmit();">
+                <input type="hidden" name="location[type]" value="Point" />
+
+                <table class="add_table" style="background-color: inherit">
+                    <tr>
+                        <td><label class="label1" for="nickname">Nickname</label></td>
+                        <td>
+                            <input class="input1" type="text" id="nickname" name="nickname" required />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label class="label1" for="dateTimeSeen">Date/Time</label></td>
+                        <td>
+                            <input
+                                    class="input1"
+                                    type="datetime-local"
+                                    id="dateTimeSeen"
+                                    name="dateTimeSeen"
+                                    required
+                            />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label class="label1" for="latitude">Latitude</label></td>
+                        <td>
+                            <input class="input1" type="number" id="latitude" name="location[coordinates][1]" step="0.000001" required />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label class="label1" for="longitude">Longitude</label></td>
+                        <td>
+                            <input class="input1" type="number" id="longitude" name="location[coordinates][0]" step="0.000001" required />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label class="label1" for="description">Description</label></td>
+                        <td>
+<textarea
+        class="input1"
+        type="text"
+        id="description"
+        name="description"
+        rows="6"
+        cols="50"
+        required
+></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label class="label1" for="identification">Identification</label>
+                        </td>
+                        <td>
+                            <input
+                                    class="input1"
+                                    type="text"
+                                    id="identification"
+                                    name="identification"
+                            />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label class="label1" for="myImage">Select image: </label></td>
+                        <td>
+                            <input
+                                    class="input1"
+                                    type="file"
+                                    id="myImage"
+                                    name="myImg"
+                                    accept="images/*"
+                                    required
+                            />
+                        </td>
+                    </tr>
+                </table>
+                <div id="message" style="display: none;"></div>
+
+                <input type="submit" value="Add Sighting" id="g" />
+            </form>
+        </div>
+    </div>
+
+</div>
+
+
+<script>
     var addmodal = document.getElementById("add_modal");
     var closemodal = document.getElementById("close_modal");
     var add = document.getElementById("add");
     add.onclick = function () {
-      addmodal.style.display = "flex";
+        addmodal.style.display = "flex";
     };
-  
+
     closemodal.onclick = function () {
-      addmodal.style.display = "none";
-    };
-  
-    window.onclick = function (event) {
-      if (event.target == addmodal) {
         addmodal.style.display = "none";
-      }
     };
-  
+
+    window.onclick = function (event) {
+        if (event.target == addmodal) {
+            addmodal.style.display = "none";
+        }
+    };
+
     function showrecent() {
-      window.location.href = "http://localhost:3000/recent";
+        window.location.href = "http://localhost:3000/recent";
     }
-  
+
     function showlist() {
-      window.location.href = "http://localhost:3000";
+        window.location.href = "http://localhost:3000/";
     }
-  
+
     function shownearby() {}
-  
+
     function addsighting() {}
-  </script>
-  
+
+    function updatesight() {}
+
+
+</script>
+<div id="results" style="margin-top:30px"></div>
+</body>
+</html>

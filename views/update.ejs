@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+</head>
+<body>
+<h1><%= title %></h1>
+<form action="/sighting/<%= sighting._id %>/update" method="POST">
+    <label for="identification">Identification:</label><br>
+    <input type="text" id="identification" name="identification" value="<%= sighting.identification %>"><br>
+    <input type="submit" value="Submit">
+</form>
+</body>
+</html>
