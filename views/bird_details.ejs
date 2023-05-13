@@ -5,19 +5,26 @@
     <link rel='stylesheet' href='/stylesheets/style.css' />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"/>
     <script
-        src="http://maps.googleapis.com/maps/api/js">
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDq9kSIJMQYKv-FDsNoGfhzrdflmf3stWg">
     </script>
 
     <script>
-    function initialize() {
-    var mapProp = {
-        center:new google.maps.LatLng(51.508742,-0.120850),
-        zoom:5,
-        mapTypeId:google.maps.MapTypeId.ROADMAP
-    };
-    var map=new google.maps.Map(document.getElementById("map"), mapProp);
-    }
-    google.maps.event.addDomListener(window, 'load', initialize);
+        function initialize() {
+            console.log("Latitude:", <%= sighting.location.coordinates[1] %>);
+            console.log("Longitude:", <%= sighting.location.coordinates[0] %>);
+
+            var mapProp = {
+                center: new google.maps.LatLng(<%= sighting.location.coordinates[1] %>, <%= sighting.location.coordinates[0] %>),
+                zoom: 15,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            var map = new google.maps.Map(document.getElementById("map"), mapProp);
+            var marker = new google.maps.Marker({
+                position: new google.maps.LatLng(<%= sighting.location.coordinates[1] %>, <%= sighting.location.coordinates[0] %>),
+                map: map
+            });
+        }
+        google.maps.event.addDomListener(window, 'load', initialize);
     </script>
 </head>
 <body>
@@ -26,9 +33,17 @@
 <div class="sub_body">
     <div class="div_left">
         <label for="bird_name">
-            <input type="button" id="bird_name" class="name_label" value="{Bird Name}">
+            <h2>Identification: <%= sighting.identification %>
+
+                <button onclick="window.location.href='/sighting/<%= sighting._id %>/update'">Update Identification</button>
+            </h2>
+            <!-- in bird_details.ejs -->
+            <button onclick="window.location.href='/sighting/<%= sighting._id %>/update'">Update Identification</button>
+
         </label>
-        <img src="/images/cute_Bird.jpg" alt="bird image" style="height: 50vh;">
+
+        <img src="<%= sighting.img %>" alt="bird image" style="height: 50vh;">
+
         <div class="chatroom">
             <div class="header">Chat Room: </div>
             <div id="chat">w</div>
@@ -37,7 +52,7 @@
     <div class="div_right">
         <div class="part"  style="margin-top: 5px;">
             <label class="title">Date/Time</label>
-            <p>2023-02-14 19:33:32</p>
+            <p><%= sighting.dateTimeSeen %></p>
         </div>
         <div class="part">
             <label class="title">Location</label>
@@ -46,17 +61,17 @@
         <div class="part">
             <label class="title">Description</label>
             <div class="text_area">
-                <p>{description}</p>
+                <p><%= sighting.description %></p>
+
             </div>
         </div>
     </div>
     <div class="clear"></div>
 </div>
 
-<%- include('../views/partials/footer.ejs') %>
 
 <script>
-    
+
 </script>
 </body>
 </html>
