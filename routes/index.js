@@ -1,175 +1,177 @@
-var express = require("express");
+var express = require('express');
 var router = express.Router();
+var multer = require('multer');
+const Sighting = require('../models/sightings'); // Require the Sighting model
 
-const path = require("path"); // get real file path for win/mac
-const fs = require("fs"); // get file & convert to base64
-const mime = require("mime"); // get file extension for validation
 
-const mongoose = require("mongoose"); // connecting to mangoDB
-
-// connect to our mangoDB via url link & username with password
-const uri =
-  "mongodb+srv://yjiao12:zhx02180218@cluster0.zhhlids.mongodb.net/bird_master";
-const Schema = mongoose.Schema;
-
-// init database schema
-const sightingSchema = new Schema({
-  nickname: { type: "string", default: "nickname", required: true },
-  dateTime: { type: "string", default: "dateTime", required: true },
-  location: { type: "string", default: "location", required: true },
-  description: { type: "string", default: "description", required: true },
-  identification: { type: "string", default: "identification", required: true },
-  img: { type: "string", default: "base64Img", required: true },
+// Configure multer storage options
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/uploads/');
+  },
+  filename: function (req, file, cb) {
+    var original = file.originalname;
+    var file_extension = original.split(".");
+    // Make the file name the date + the file extension
+    filename = Date.now() + '.' + file_extension[file_extension.length - 1];
+    cb(null, filename);
+  },
 });
 
-// connting to database
-mongoose.connect(uri);
-const db = mongoose.connection;
-db.once("error", () => {
-  console.warn("connection error");
+var upload = multer({ storage: storage });
+
+// Bird list route
+router.get('/', async function (req, res) {
+  try {
+    // Fetch all sightings from the database
+    const sightings = await Sighting.find({});
+
+    // Render the sightings_list view with the fetched data
+    res.render('bird_list', { title: '', sightings });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error retrieving sightings from the database.');
+  }
 });
-db.once("open", () => {
-  console.log("database is connected");
+
+// Recent bird route
+router.get('/recent', async function(req, res) {
+  try {
+    // Fetch all sightings from the database, sorted by dateTimeSeen
+    const sightings = await Sighting.find({}).sort({dateTimeSeen: -1});
+
+    // Render the bird_recent view with the fetched data
+    res.render('bird_recent', { title: '', sightings });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error retrieving sightings from the database.');
+  }
 });
-db.once("close", () => {
-  console.log("db is disconnected");
+
+
+// Add bird route
+router.get('/add', function (req, res) {
+  res.render('add', { title: 'Add a new Character to the DB' });
 });
 
-// The schema declared here is used to query the database for the sighting_lists library, and then mongoose is called to create a new database model (Sightings) that can be called later in the code
-const Sightings = mongoose.model("sighting_lists", sightingSchema);
-let dbData = {};
+router.post('/add', upload.single('myImg'), async function (req, res) {
+  console.log('Request body:', req.body);
 
-// The two methods here, getItems, createEntry, are both called to render to ejs
-
-/**
- * getting all entries from database
- */
-const getItems = async () => {
-  console.log("getting all entries from database");
-  const sighting_list = await Sightings.find({});
-  dbData = sighting_list;
-  return dbData;
-};
-
-// getItems();
-// setTimeout(() => {
-//   console.log(dbData);
-// }, 20000);
-
-let saveFlag = false;
-
-/**
- * @param {} params object saving to our database as a sighting
- * @return indicate if the function save the data success.
- */
-const createEntry = async (params) => {
-  const sighting = new Sightings(params);
-  sighting
-    .save()
-    .then(() => {
-      console.log(params?.nickname, "has been successfully added to database");
-      saveFlag = true;
-      return true;
-    })
-    .catch((e) => {
-      console.error(e);
-      return false;
+  try {
+    const newSighting = new Sighting({
+      identification: req.body.identification,
+      description: req.body.description,
+      img: req.file.path.replace('public', ''),
+      dateTimeSeen: req.body.dateTimeSeen,
+      nickname: req.body.nickname,
+      location: {
+        type: 'Point',
+        coordinates: req.body.location.coordinates
+      },
+      datetime: new Date(),
     });
-  // return false;
-};
 
-/**
- *
- * @param {} file get original image file
- * @returns image file in base 64 format
- */
-const imgParser = (file) => {
-  const filePath = path.resolve(file); // get file exact path no matter which OS
-
-  const fileMimeType = mime.getType(filePath); // get file type. eg: image
-
-  // if the file not the image file consle the prompt
-  // if cannot get file type, we believe the error must be happened, so stop running the parser
-  if (!fileMimeType?.toString()?.includes("image") ?? true) {
-    console.error(`Failed! ${filePath}:\tNot image file!`);
-    return;
-  }
-
-  let data = fs.readFileSync(filePath);
-  data = Buffer.from(data).toString("base64");
-  return data;
-};
-
-/* GET home page. */
-router.get("/", function (req, res) {
-  // res.render("bird_list", { title: "Bird List", data: getItems() });
-  res.render("welcome", {
-    title: "Welcome",
-    save: saveFlag ? "succes" : "failed",
-  });
-});
-
-router.post("/", (req, res) => {
-  // req is the form returned by the page
-  const requestData = req.body;
-  const { nickname, datetime, location, description, identification, img } =
-    requestData;
-  const imgData = imgParser(img); // imgData is 64 base
-  const savingData = {
-    nickname,
-    datetime,
-    location,
-    description,
-    identification,
-    img: imgData,
-  };
-
-  // If createEntry returns false here, the database write failed and we need to go to the dbfailed page
-  // If createEntry returns true it means success, you need to write a db_success page
-  if (createEntry(savingData)) {
-    // TODO
-    // Since I don't know what this success page looks like, I didn't write it, so I'll use this instead
-    res.render("db_failed", { title: "success", savingData: savingData });
-    // res.render("db_success", { title: "success", savingData: savingData });
-  } else {
-    res.render("db_failed", { title: "Bad Request xxxxxxxx", ...savingData });
+    await newSighting.save();
+    res.json({message: 'Success'});
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error saving sighting to the database.');
   }
 });
 
-router.post("./directSave", (req, res) => {
-  const requestData = req.body;
-  const { nickname, datetime, location, description, identification, img } =
-    requestData;
-  const savingData = {
-    nickname,
-    datetime,
-    location,
-    description,
-    identification,
-    img: imgData,
-  };
-  if (createEntry(savingData)) {
-    console.log("success");
-  } else {
-    // TODO
-    // Not sure there is a need for anything here
-    // alert('saving failed')
-    console.log("Another attempt to save offline data failed");
+// Bird details route
+router.get('/sighting/:id', async function (req, res, next) {
+  try {
+    const sightingId = req.params.id;
+    const sighting = await Sighting.findById(sightingId);
+    if (sighting) {
+      res.render('bird_details', { title: '', sighting: sighting });
+    } else {
+      res.status(404).send('Sighting not found');
+    }
+  } catch (err) {
+    res.status(500).send(`Error: ${err.message}`);
   }
 });
 
-router.get("/recent", function (req, res) {
-  res.render("bird_recent", { title: "Recent" });
+//update identification
+router.get('/sighting/:id/update', async function (req, res, next) {
+  try {
+    const sightingId = req.params.id;
+    const sighting = await Sighting.findById(sightingId);
+    if (sighting) {
+      res.render('update', { title: 'Update a sighting', sighting: sighting });
+    } else {
+      res.status(404).send('Sighting not found');
+    }
+  } catch (err) {
+    res.status(500).send(`Error: ${err.message}`);
+  }
 });
 
-router.get("/detail", function (req, res) {
-  res.render("bird_details", { title: "Details" });
+//post identification
+router.post('/sighting/:id/update', async function (req, res) {
+  try {
+    const sightingId = req.params.id;
+    const newIdentification = req.body.identification;
+    const posterId = req.body.posterId;
+
+    // Fetch the sighting from the database
+    const sighting = await Sighting.findById(sightingId);
+
+    if (sighting) {
+      // Check if the ID matches the original poster's ID
+      if (sighting.posterId === posterId) {
+        // Update the sighting
+        sighting.identification = newIdentification;
+        await sighting.save();
+        res.json(sighting);
+      } else {
+        res.status(403).send('Unauthorized to update this sighting');
+      }
+    } else {
+      res.status(404).send('Sighting not found');
+    }
+  } catch (err) {
+    res.status(500).send(`Error: ${err.message}`);
+  }
 });
 
-router.get("/list", function (req, res) {
-  res.render("bird_list", { title: "List" });
+
+//get knowledge graph
+router.get('/sighting/:id', function(req, res, next) {
+  // Fetch the sighting from your database...
+
+  // Then fetch the bird information from DBpedia:
+  const resource = `http://dbpedia.org/resource/${sighting.identification}`;
+  const endpointUrl = "https://dbpedia.org/sparql";
+  const sparqlQuery = `
+        SELECT ?label ?scientificName ?abstract ?uri WHERE {
+            <${resource}> rdfs:label ?label .
+            <${resource}> dbo:abstract ?abstract .
+            <${resource}> dbo:scientificName ?scientificName .
+            BIND(IRI(?abstract) AS ?uri)
+            FILTER (langMatches(lang(?label),"EN"))
+            FILTER (langMatches(lang(?abstract),"EN"))
+        }`;
+  const urlEncodedQuery = encodeURIComponent(sparqlQuery);
+  const url = `${endpointUrl}?query=${urlEncodedQuery}&format=json`;
+
+  fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        // Extract the bird information from the data...
+        const bird = data.results.bindings[0];
+        res.render('sighting', {
+          title: 'Sighting',
+          sighting: sighting,
+          bird: bird
+        });
+      });
 });
 
-router.use(express.static("public"));
+
+
+
 
 module.exports = router;

@@ -12,12 +12,19 @@
 
     <script>
         function initialize() {
+            console.log("Latitude:", <%= sighting.location.coordinates[1] %>);
+            console.log("Longitude:", <%= sighting.location.coordinates[0] %>);
+
             var mapProp = {
-                center: new google.maps.LatLng(51.508742, -0.120850),
-                zoom: 5,
+                center: new google.maps.LatLng(<%= sighting.location.coordinates[1] %>, <%= sighting.location.coordinates[0] %>),
+                zoom: 15,
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             };
             var map = new google.maps.Map(document.getElementById("map"), mapProp);
+            var marker = new google.maps.Marker({
+                position: new google.maps.LatLng(<%= sighting.location.coordinates[1] %>, <%= sighting.location.coordinates[0] %>),
+                map: map
+            });
         }
         google.maps.event.addDomListener(window, 'load', initialize);
     </script>
@@ -36,6 +43,41 @@
                     <div class="header">Chat Room: </div>
                     <div id="chat">w</div>
                 </div>
+<%- include('../views/partials/header.ejs') %>
+
+<div class="sub_body">
+    <div class="div_left">
+        <label for="bird_name">
+            <h2>Identification: <%= sighting.identification %>
+
+                <button onclick="window.location.href='/sighting/<%= sighting._id %>/update'">Update Identification</button>
+            </h2>
+            <!-- in bird_details.ejs -->
+            <button onclick="window.location.href='/sighting/<%= sighting._id %>/update'">Update Identification</button>
+
+        </label>
+
+        <img src="<%= sighting.img %>" alt="bird image" style="height: 50vh;">
+
+        <div class="chatroom">
+            <div class="header">Chat Room: </div>
+            <div id="chat">w</div>
+        </div>
+    </div>
+    <div class="div_right">
+        <div class="part"  style="margin-top: 5px;">
+            <label class="title">Date/Time</label>
+            <p><%= sighting.dateTimeSeen %></p>
+        </div>
+        <div class="part">
+            <label class="title">Location</label>
+            <div id="map"></div>
+        </div>
+        <div class="part">
+            <label class="title">Description</label>
+            <div class="text_area">
+                <p><%= sighting.description %></p>
+
             </div>
 
             <div class="justify-content-end col-6">
