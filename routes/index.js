@@ -54,30 +54,41 @@ router.get('/add', function (req, res) {
   res.render('add', { title: 'Add a new Character to the DB' });
 });
 
+// Define a route for POST requests to '/add'
 router.post('/add', upload.single('myImg'), async function (req, res) {
+  // Log the request body to the console
   console.log('Request body:', req.body);
 
   try {
+    // Create a new sighting object from the request body
     const newSighting = new Sighting({
       identification: req.body.identification,
       description: req.body.description,
+      // Store the image path, removing the 'public' part of the path
       img: req.file.path.replace('public', ''),
       dateTimeSeen: req.body.dateTimeSeen,
       nickname: req.body.nickname,
       location: {
         type: 'Point',
+        // Get the coordinates from the request body
         coordinates: req.body.location.coordinates
       },
+      // Set the current date and time
       datetime: new Date(),
     });
 
+    // Save the new sighting to the database
     await newSighting.save();
+    // Send a success message as the response
     res.json({message: 'Success'});
   } catch (error) {
+    // Log any errors to the console
     console.error(error);
+    // Send an error message as the response, with a status code of 500
     res.status(500).send('Error saving sighting to the database.');
   }
 });
+
 
 // Bird details route
 router.get('/sighting/:id', async function (req, res, next) {
@@ -139,36 +150,52 @@ router.post('/sighting/:id/update', async function (req, res) {
 
 
 //get knowledge graph
-router.get('/sighting/:id', function(req, res, next) {
-  // Fetch the sighting from your database...
+/*router.get('/sighting/:id', async function (req, res, next) {
+  try {
+    const sightingId = req.params.id;
+    const sighting = await Sighting.findById(sightingId);
+    if (sighting) {
 
-  // Then fetch the bird information from DBpedia:
-  const resource = `http://dbpedia.org/resource/${sighting.identification}`;
-  const endpointUrl = "https://dbpedia.org/sparql";
-  const sparqlQuery = `
-        SELECT ?label ?scientificName ?abstract ?uri WHERE {
-            <${resource}> rdfs:label ?label .
-            <${resource}> dbo:abstract ?abstract .
-            <${resource}> dbo:scientificName ?scientificName .
-            BIND(IRI(?abstract) AS ?uri)
-            FILTER (langMatches(lang(?label),"EN"))
-            FILTER (langMatches(lang(?abstract),"EN"))
-        }`;
-  const urlEncodedQuery = encodeURIComponent(sparqlQuery);
-  const url = `${endpointUrl}?query=${urlEncodedQuery}&format=json`;
+      const resourceUrl = `http://dbpedia.org/resource/${encodeURIComponent(sighting.identification)}`;
+      console.log(`Resource URL: ${resourceUrl}`);
+      const sparqlEndpointUrl = 'http://dbpedia.org/sparql';
 
-  fetch(url)
-      .then(response => response.json())
-      .then(data => {
-        // Extract the bird information from the data...
-        const bird = data.results.bindings[0];
-        res.render('sighting', {
-          title: 'Sighting',
-          sighting: sighting,
-          bird: bird
-        });
-      });
-});
+      const sparqlQuery = `
+        SELECT ?label ?abstract ?scientificName ?uri WHERE {
+          <${resourceUrl}> rdfs:label ?label .
+          <${resourceUrl}> dbo:abstract ?abstract .
+          <${resourceUrl}> dbo:scientificName ?scientificName .
+          <${resourceUrl}> foaf:isPrimaryTopicOf ?uri .
+          FILTER(langMatches(lang(?label), "EN"))
+          FILTER(langMatches(lang(?abstract), "EN"))
+        }
+      `.trim();
+
+      const urlEncodedQuery = encodeURIComponent(sparqlQuery);
+      const url = `${sparqlEndpointUrl}?query=${urlEncodedQuery}&format=json`;
+
+      fetch(url)
+          .then(response => response.json())
+          .then(data => {
+            console.log(data);  // Add this line
+            const bird = data.results.bindings[0] ? data.results.bindings[0] : {};
+            console.log(bird);
+            res.render('bird_details', { title: '', sighting: sighting, bird: bird });
+          })
+          .catch(error => {
+            console.error(`Error: ${error}`);
+            res.status(500).send(`Error: ${error.message}`);
+          });
+
+    } else {
+      res.status(404).send('Sighting not found');
+    }
+  } catch (err) {
+    res.status(500).send(`Error: ${err.message}`);
+  }
+}); */
+
+
 
 
 
