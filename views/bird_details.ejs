@@ -8,6 +8,7 @@
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDq9kSIJMQYKv-FDsNoGfhzrdflmf3stWg">
     </script>
 
+
     <script>
         function initialize() {
             console.log("Latitude:", <%= sighting.location.coordinates[1] %>);
@@ -59,12 +60,26 @@
             <div id="map"></div>
         </div>
         <div class="part">
+            <label class="title">Identification</label>
+            <% if (sighting.birdInfo) { %>
+                <p><%= sighting.birdInfo.name %></p>
+                <a href="<%= sighting.birdInfo.uri %>">More information</a>
+            <% } else { %>
+                <p>No additional information available.</p>
+            <% } %>
+        </div>
+        <div class="part">
             <label class="title">Description</label>
             <div class="text_area">
-                <p><%= sighting.description %></p>
-
+                <% if (sighting.birdInfo) { %>
+                    <p><%= sighting.birdInfo.description %></p>
+                <% } else { %>
+                    <p>No additional description available.</p>
+                <% } %>
             </div>
         </div>
+
+
     </div>
     <div class="clear"></div>
 </div>

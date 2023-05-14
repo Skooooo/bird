@@ -2,7 +2,8 @@ var express = require('express');
 var router = express.Router();
 var multer = require('multer');
 const Sighting = require('../models/sightings'); // Require the Sighting model
-
+const fetch = require('node-fetch');
+const SPARQL_URL = 'https://dbpedia.org/sparql';
 
 // Configure multer storage options
 var storage = multer.diskStorage({
@@ -51,7 +52,7 @@ router.get('/recent', async function(req, res) {
 
 // Add bird route
 router.get('/add', function (req, res) {
-  res.render('add', { title: 'Add a new Character to the DB' });
+  res.render('add', { title: 'Add a new Sighting to the DB' });
 });
 
 // Define a route for POST requests to '/add'
@@ -90,12 +91,38 @@ router.post('/add', upload.single('myImg'), async function (req, res) {
 });
 
 
-// Bird details route
+// Bird details/dbpedia
 router.get('/sighting/:id', async function (req, res, next) {
   try {
     const sightingId = req.params.id;
     const sighting = await Sighting.findById(sightingId);
     if (sighting) {
+      const birdName = encodeURIComponent(sighting.identification);
+      const query = `
+        PREFIX dbo: <http://dbpedia.org/ontology/>
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+        SELECT ?label ?description ?uri WHERE {
+            ?uri a dbo:Bird .
+            ?uri dbo:abstract ?description ;
+                rdfs:label ?label .
+            ?uri foaf:isPrimaryTopicOf ?wikiPage .
+            FILTER (LANG(?label) = 'en' && LANG(?description) = 'en' && STRSTARTS(LCASE(?label), "${birdName.toLowerCase()}"))
+           }
+           LIMIT 1
+            `;
+      const url = `${SPARQL_URL}?query=${encodeURIComponent(query)}&format=json`;
+      const response = await fetch(url);
+      const data = await response.json();
+      if (data.results.bindings.length > 0) {
+        const birdInfo = data.results.bindings[0];
+        sighting.birdInfo = {
+          name: birdInfo.label.value,
+          description: birdInfo.description.value,
+          uri: birdInfo.uri.value
+        };
+      }
+
       res.render('bird_details', { title: '', sighting: sighting });
     } else {
       res.status(404).send('Sighting not found');
@@ -104,6 +131,7 @@ router.get('/sighting/:id', async function (req, res, next) {
     res.status(500).send(`Error: ${err.message}`);
   }
 });
+
 
 //update identification
 router.get('/sighting/:id/update', async function (req, res, next) {
@@ -147,58 +175,5 @@ router.post('/sighting/:id/update', async function (req, res) {
     res.status(500).send(`Error: ${err.message}`);
   }
 });
-
-
-//get knowledge graph
-/*router.get('/sighting/:id', async function (req, res, next) {
-  try {
-    const sightingId = req.params.id;
-    const sighting = await Sighting.findById(sightingId);
-    if (sighting) {
-
-      const resourceUrl = `http://dbpedia.org/resource/${encodeURIComponent(sighting.identification)}`;
-      console.log(`Resource URL: ${resourceUrl}`);
-      const sparqlEndpointUrl = 'http://dbpedia.org/sparql';
-
-      const sparqlQuery = `
-        SELECT ?label ?abstract ?scientificName ?uri WHERE {
-          <${resourceUrl}> rdfs:label ?label .
-          <${resourceUrl}> dbo:abstract ?abstract .
-          <${resourceUrl}> dbo:scientificName ?scientificName .
-          <${resourceUrl}> foaf:isPrimaryTopicOf ?uri .
-          FILTER(langMatches(lang(?label), "EN"))
-          FILTER(langMatches(lang(?abstract), "EN"))
-        }
-      `.trim();
-
-      const urlEncodedQuery = encodeURIComponent(sparqlQuery);
-      const url = `${sparqlEndpointUrl}?query=${urlEncodedQuery}&format=json`;
-
-      fetch(url)
-          .then(response => response.json())
-          .then(data => {
-            console.log(data);  // Add this line
-            const bird = data.results.bindings[0] ? data.results.bindings[0] : {};
-            console.log(bird);
-            res.render('bird_details', { title: '', sighting: sighting, bird: bird });
-          })
-          .catch(error => {
-            console.error(`Error: ${error}`);
-            res.status(500).send(`Error: ${error.message}`);
-          });
-
-    } else {
-      res.status(404).send('Sighting not found');
-    }
-  } catch (err) {
-    res.status(500).send(`Error: ${err.message}`);
-  }
-}); */
-
-
-
-
-
-
 
 module.exports = router;
