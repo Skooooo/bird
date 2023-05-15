@@ -2,13 +2,13 @@
 var mongoose = require('mongoose');
 
 // MongoDB URL to connect to
-var mongoDB = 'mongodb://localhost:27017/sightings'; // New URL for the "sightings" database
+var mongoDB = 'mongodb+srv://Team6:Team6@cluster0.7ydimha.mongodb.net/sightings?retryWrites=true&w=majority'; // New URL for the "sightings" database
 
 // Set mongoose to use global Promise library
 mongoose.Promise = global.Promise;
 
 // Connect mongoose to the MongoDB database
-mongoose.connect(mongoDB);
+mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 
 // Get the connection object for the database
 var db = mongoose.connection;
