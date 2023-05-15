@@ -49,6 +49,9 @@ router.get('/recent', async function(req, res) {
   }
 });
 
+router.get('/add_bird', function (req, res) {
+  res.render('add_bird', { title: 'Enter a sighting information' });
+});
 
 // Add bird route
 router.get('/add', function (req, res) {
@@ -175,5 +178,42 @@ router.post('/sighting/:id/update', async function (req, res) {
     res.status(500).send(`Error: ${err.message}`);
   }
 });
+
+
+//get knowledge graph
+router.get('/sighting/:id', function(req, res, next) {
+  // Fetch the sighting from your database...
+
+  // Then fetch the bird information from DBpedia:
+  const resource = `http://dbpedia.org/resource/${sighting.identification}`;
+  const endpointUrl = "https://dbpedia.org/sparql";
+  const sparqlQuery = `
+        SELECT ?label ?scientificName ?abstract ?uri WHERE {
+            <${resource}> rdfs:label ?label .
+            <${resource}> dbo:abstract ?abstract .
+            <${resource}> dbo:scientificName ?scientificName .
+            BIND(IRI(?abstract) AS ?uri)
+            FILTER (langMatches(lang(?label),"EN"))
+            FILTER (langMatches(lang(?abstract),"EN"))
+        }`;
+  const urlEncodedQuery = encodeURIComponent(sparqlQuery);
+  const url = `${endpointUrl}?query=${urlEncodedQuery}&format=json`;
+
+  fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        // Extract the bird information from the data...
+        const bird = data.results.bindings[0];
+        res.render('sighting', {
+          title: 'Sighting',
+          sighting: sighting,
+          bird: bird
+        });
+      });
+});
+
+
+
+
 
 module.exports = router;

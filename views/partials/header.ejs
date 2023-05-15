@@ -1,182 +1,57 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title><%= title %></title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="/javascripts/add.js"></script>
-    <script src="/javascripts/indexedDB.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+  integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+  integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+  integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.bundle.min.js"></script>
 
-</head>
-<body>
-<h1><%= title %></h1>
-<header class="begin">
-    <div class="left">
-        <label for="birdSightings">
-            <input
-                    class="fbutton"
-                    type="button"
-                    id="birdSightings"
-                    value="Bird Sightings"
-                    onclick="showlist()"
-            />
-        </label>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="/javascripts/add.js"></script>
+<script src="/javascripts/map.js"></script>
+<script src="/javascripts/indexedDB.js"></script>
+
+<nav class="navbar navbar-expand-lg bg-light navbar-light justify-content-between">
+  <div class="container">
+    <h1 class="navbar-brand mb-0 h1">Bird Sightings</h1>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-end" id="menu">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a href="/" class="nav-link">List</a>
+        </li>
+        <li class="nav-item">
+          <a href="/recent" class="nav-link">Recent</a>
+        </li>
+        <li class="nav-item">
+          <a href="/nearby" class="nav-link">Nearby</a>
+        </li>
+      </ul>
+      <div class=" d-flex align-items-center">
+          <button type="button" onclick="goAdd()" class="nav-link">Add a Sighting</button>
+      </div>
     </div>
-    <div class="clear"></div>
-</header>
+  </div>
+</nav>
 
-<header class="subheader">
-    <div class="bntline">
-        <div class="left">
-            <button class="text_bnt" id="sighting_list" onclick="showlist()">
-                Sighting List
-            </button>
-            <button class="text_bnt" id="recent" onclick="showrecent()">
-                Recent
-            </button>
-            <button class="text_bnt" id="nearby" onclick="shownearby()">
-                Nearby
-            </button>
-        </div>
-        <div class="right">
-            <button class="text_bnt" id="add" onclick="addsighting()">
-                Add a sighting
-            </button>
-            <button class="text_bnt" id="update" onclick="updatesight()">
-                Update identification
-            </button>
-        </div>
-        <div class="clear"></div>
-    </div>
-</header>
-
-<div id="add_modal">
-    <div class="modal">
-        <div class="top_form">
-            <div id="close_modal">
-          <span class="material-symbols-outlined" style="background: inherit">close</span>
-            </div>
-        </div>
-        <div class="add_form" style="background-color: rgba(253, 240, 240, 1)">
-            <h2 style="background-color: inherit">Add a sighting</h2>
-            <form id="xForm" enctype="multipart/form-data" method="POST" action="/add"  onsubmit="return onSubmit();">
-                <input type="hidden" name="location[type]" value="Point" />
-
-                <table class="add_table" style="background-color: inherit">
-                    <tr>
-                        <td><label class="label1" for="nickname">Nickname</label></td>
-                        <td>
-                            <input class="input1" type="text" id="nickname" name="nickname" required />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><label class="label1" for="dateTimeSeen">Date/Time</label></td>
-                        <td>
-                            <input
-                                    class="input1"
-                                    type="datetime-local"
-                                    id="dateTimeSeen"
-                                    name="dateTimeSeen"
-                                    required
-                            />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><label class="label1" for="latitude">Latitude</label></td>
-                        <td>
-                            <input class="input1" type="number" id="latitude" name="location[coordinates][1]" step="0.000001" required />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><label class="label1" for="longitude">Longitude</label></td>
-                        <td>
-                            <input class="input1" type="number" id="longitude" name="location[coordinates][0]" step="0.000001" required />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><label class="label1" for="description">Description</label></td>
-                        <td>
-<textarea
-        class="input1"
-        type="text"
-        id="description"
-        name="description"
-        rows="6"
-        cols="50"
-        required
-></textarea>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label class="label1" for="identification">Identification</label>
-                        </td>
-                        <td>
-                            <input
-                                    class="input1"
-                                    type="text"
-                                    id="identification"
-                                    name="identification"
-                            />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><label class="label1" for="myImage">Select image: </label></td>
-                        <td>
-                            <input
-                                    class="input1"
-                                    type="file"
-                                    id="myImage"
-                                    name="myImg"
-                                    accept="images/*"
-                                    required
-                            />
-                        </td>
-                    </tr>
-                </table>
-                <div id="message" style="display: none;"></div>
-
-                <input type="submit" value="Add Sighting" id="g" />
-            </form>
-        </div>
-    </div>
-
-</div>
 
 
 <script>
-    var addmodal = document.getElementById("add_modal");
-    var closemodal = document.getElementById("close_modal");
-    var add = document.getElementById("add");
-    add.onclick = function () {
-        addmodal.style.display = "flex";
-    };
+  function goAdd() {
+    window.location.href = "http://localhost:3000/add_bird";
+  }
 
-    closemodal.onclick = function () {
-        addmodal.style.display = "none";
-    };
+  function showlist() {
+    window.location.href = "http://localhost:3000/";
+  }
 
-    window.onclick = function (event) {
-        if (event.target == addmodal) {
-            addmodal.style.display = "none";
-        }
-    };
+  function shownearby() {}
 
-    function showrecent() {
-        window.location.href = "http://localhost:3000/recent";
-    }
+  function addsighting() {}
 
-    function showlist() {
-        window.location.href = "http://localhost:3000/";
-    }
-
-    function shownearby() {}
-
-    function addsighting() {}
-
-    function updatesight() {}
-
-
+  function updatesight() {}
 </script>
-<div id="results" style="margin-top:30px"></div>
-</body>
-</html>

@@ -12,6 +12,7 @@ function sendAjaxQuery(url, data) {
             alert('Sightings added successfully!');
             // Reset the form
             $('#xForm').trigger('reset');
+            window.location.reload();
         },
         error: function (xhr, status, error) {  // Function to call on failed request
             // Show an alert with the error message
