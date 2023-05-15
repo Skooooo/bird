@@ -48,6 +48,9 @@ router.get('/recent', async function(req, res) {
   }
 });
 
+router.get('/add_bird', function (req, res) {
+  res.render('add_bird', { title: 'Enter a sighting information' });
+});
 
 // Add bird route
 router.get('/add', function (req, res) {
@@ -171,7 +174,9 @@ router.get('/sighting/:id', function(req, res, next) {
 });
 
 
-
+router.get('/index', function (req, res) {
+  res.render('index', { title: 'Show map' });
+});
 
 
 module.exports = router;

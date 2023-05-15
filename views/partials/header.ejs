@@ -8,6 +8,7 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="/javascripts/add.js"></script>
+<script src="/javascripts/map.js"></script>
 <script src="/javascripts/indexedDB.js"></script>
 
 <nav class="navbar navbar-expand-lg bg-light navbar-light justify-content-between">
@@ -31,132 +32,17 @@
         </li>
       </ul>
       <div class=" d-flex align-items-center">
-        <button type="button" class="btn btn-primary me-3" data-toggle="modal" data-target="#add_modal" id="addbtn">Add
-          a Sighting</button>
+          <button type="button" onclick="goAdd()" class="nav-link">Add a Sighting</button>
       </div>
     </div>
   </div>
 </nav>
-<!-- 
-<header class="subheader">
-    <div class="bntline">
-        <div class="left">
-            <button class="text_bnt" id="sighting_list" onclick="showlist()">
-                Sighting List
-            </button>
-            <button class="text_bnt" id="recent" onclick="showrecent()">
-                Recent
-            </button>
-            <button class="text_bnt" id="nearby" onclick="shownearby()">
-                Nearby
-            </button>
-        </div>
-        <div class="right">
-            <button class="text_bnt" id="add" onclick="addsighting()">
-                Add a sighting
-            </button>
-            <button class="text_bnt" id="update" onclick="updatesight()">
-                Update identification
-            </button>
-        </div>
-        <div class="clear"></div>
-    </div>
-</header> -->
 
-<!-- Modal -->
-<div class="modal fade" id="add_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-  aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Add a Sighting</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form id="xForm" enctype="multipart/form-data" method="POST" action="/add"  onsubmit="return onSubmit();">
-          <div class="form-group row">
-            <label for="nickname" class="col-sm-3 col-form-label text-right">Nickname:</label>
-            <div class="col-sm-9">
-              <input type="text" class="form-control" id="nickname" name="nickname" placeholder="nickname" required>
-            </div>
-          </div>
-          <div class="form-group row">
-            <label for="dateTimeSeen" class="col-sm-3 col-form-label text-right">Date/Time:</label>
-            <div class="col-sm-9">
-              <input type="datetime-local" class="form-control" id="dateTimeSeen" name="dateTimeSeen" required>
-            </div>
-          </div>
-          <!-- <div class="form-group row">
-            <label for="location" class="col-sm-3 col-form-label text-right">Location:</label>
-            <div class="col-sm-3">
-              <button type="button" class="form-control" id="location"
-                style="background: #334662e1; color: #ffffff; font-weight: bold;">Locate</button>
-            </div>
-          </div> -->
-          <div class="form-group row">
-            <label for="latitude" class="col-sm-3 col-form-label text-right">Latitude:</label>
-            <div class="col-sm-3">
-              <input type="number" class="form-control" id="latitude" name="location[coordinates][1]" required>
-            </div>
-          </div>
-          <div class="form-group row">
-            <label for="longitude" class="col-sm-3 col-form-label text-right">Longitude:</label>
-            <div class="col-sm-3">
-              <input type="number" class="form-control" id="longitude" name="location[coordinates][0]" required>
-            </div>
-          </div>
-          <div class="form-group row">
-            <label for="description" class="col-sm-3 col-form-label text-right">Description:</label>
-            <div class="col-sm-9">
-              <textarea class="form-control" id="description" rows="4" name="description" required></textarea>
-            </div>
-          </div>
-          <div class="form-group row">
-            <label for="identification" class="col-sm-3 col-form-label text-right" >Identification:</label>
-            <div class="col-sm-9">
-              <textarea class="form-control" id="identification" rows="3" name="identification"></textarea>
-            </div>
-          </div>
-          <div class="form-group row">
-            <label for="image" class="col-sm-3 col-form-label text-right">Image:</label>
-            <div class="col-sm-9">
-              <input type="file" class="form-control-file" id="myImage" name="myImg" accept="images/*" required>
-            </div>
-          </div>
-          <div id="message" style="display: none;"></div>
-          <input type="submit" value="Add Sighting" id="g" class="btn btn-primary"/>
-          <!-- <button type="submit" class="btn btn-primary">Submit</button> -->
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-<div id="results" class="container mt-2"></div>
+
 
 <script>
-  $('#addbtn').on('click', function (event) {
-    $('add_modal').modal('show')
-  });
-
-  $('#location').on('click', function (event) {
-    const findlocation = () => {
-      const success = (position) => {
-        console.log(position)
-      }
-
-      const error = () => {
-        console.log("Unable to locate")
-      }
-
-      navigator.geolocation.getCurrentPosition(success, error);
-    }
-  });
-  // document.querySelector('#location').addEventListener('click', findlocation());
-
-  function showrecent() {
-    window.location.href = "http://localhost:3000/recent";
+  function goAdd() {
+    window.location.href = "http://localhost:3000/add_bird";
   }
 
   function showlist() {

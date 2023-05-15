@@ -13,50 +13,26 @@
 
 <body>
   <%- include('../views/partials/header.ejs') %>
-  <div class="container mt-4">
+  <div class="container mt-3">
     <div class="card-deck">
       <% sightings.forEach(function(sighting) { %>
-      <div class="card" style="max-width: 18rem;">
+      <div class="card mt-2" style="min-width: 30vh; max-width: 16rem;">
         <img class="card-img-top" src="<%= sighting.img %>" alt="bird image">
         <div class="card-body">
-          <a class="card-title h5" href="/sighting/<%= sighting._id %>">Bird Name</a>
+          <a class="card-title h5" href="/sighting/<%= sighting._id %>">
+            <%= sighting.nickname %>
+          </a>
           <div class="card-text">
             <p>Date and Time: <%= sighting.dateTimeSeen.toLocaleString() %></p>
             <p>Identification: <%= sighting.identification %></p>
             <p>Nickname: <%= sighting.nickname %></p>
           </div>
-          <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
         </div>
       </div>
       <% }); %>
     </div>
   </div>
-
-  <!-- <div class="sub_body">
-    <div id="sightings_card" class="row">
-
-      <% sightings.forEach(function(sighting) { %>
-      <div class="sighting" onclick="window.location.href='/sighting/<%= sighting._id %>'">
-
-        <div class="column">
-          <a href="/sighting/<%= sighting._id %>">
-            <div class="single_card">
-              <div class="sighting_image">
-                <img src="<%= sighting.img %>" alt="sighting image" style="height: 100%;">
-              </div>
-              <div class="sighting_info">
-                <p>Date and Time: <%= sighting.dateTimeSeen.toLocaleString() %></p>
-                <p>Identification: <%= sighting.identification %></p>
-                <p>Nickname: <%= sighting.nickname %></p>
-              </div>
-            </div>
-          </a>
-        </div>
-        <% }); %>
-      </div>
-
-    </div> -->
-  <!-- </div>> -->
+  
 </body>
 
 </html>

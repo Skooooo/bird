@@ -13,6 +13,7 @@ function sendAjaxQuery(url, data) {
 
             // Clear the form
             $('#xForm').trigger('reset');
+            window.location.reload();
         },
         error: function (xhr, status, error) {
 
@@ -31,7 +32,7 @@ function onSubmit() {
     formData.set("location[coordinates][1]", parseFloat(document.getElementById("latitude").value));
 
 
-
+    console.log("here")
     let sighting = {
         nickname: formData.get('nickname'),
         dateTimeSeen: formData.get('dateTimeSeen'),
@@ -46,7 +47,7 @@ function onSubmit() {
         identification: formData.get('identification'),
         myImg: formData.get('myImg') // handle image in a special way since it's a file
     };
-
+    console.log("here1")
     const sightingsIDB = requestIDB.result;
     const transaction = sightingsIDB.transaction(["Sightings"], "readwrite");
     const sightingsStore = transaction.objectStore("Sightings");
@@ -59,7 +60,7 @@ function onSubmit() {
             insertSightingInList(getRequest.result);
         });
     });
-
+    console.log("here")
     console.log(formData);
     sendAjaxQuery('/add', formData);
     return false;

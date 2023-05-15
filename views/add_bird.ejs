@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title><%= title %></title>
+    <!-- <link rel='stylesheet' href='/stylesheets/style.css' /> -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+</head>
+
+<body>
+    <%- include('../views/partials/header.ejs') %>
+    <div class="container mt-3">
+        <form id="xForm" enctype="multipart/form-data" method="POST" action="/add" onsubmit="return onSubmit();">
+            <div class="form-group row">
+                <label for="nickname" class="col-sm-3 col-form-label text-right">Nickname:</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="nickname" name="nickname" placeholder="nickname"
+                        required>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="dateTimeSeen" class="col-sm-3 col-form-label text-right">Date/Time:</label>
+                <div class="col-sm-9">
+                    <input type="datetime-local" class="form-control" id="dateTimeSeen" name="dateTimeSeen" required>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="address" class="col-sm-3 col-form-label text-right">Location:</label>
+                <div class="col-sm-3">
+                    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#mapCard"
+                        aria-expanded="false" aria-controls="mapCard">Locate</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="collapse form-control" id="mapCard">
+                    <div class="card card-body" style="height: 550px;">
+                        <div class="form-group row justify-content-center">
+                            <input type="text" class="form-control col-sm-6" id="search" name="search"
+                                placeholder="Enter a location">
+                        </div>
+                        <div id="map" class="justify-content-center col-sm-12" style="height: 80vh;"></div>
+                        <div id="infowindow-content" hidden>
+                            <span id="place-name" class="title"></span><br />
+                            <strong>Place ID:</strong> <span id="place-id"></span><br/>
+                            <span id="place-address"></span>
+                        </div>
+                        <script src="/javascripts/map.js"></script>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="latitude" class="col-sm-3 col-form-label text-right">Latitude:</label>
+                <div class="col-sm-3">
+                    <input type="number" step="0.0001" class="form-control" id="latitude"
+                        name="location[coordinates][1]" required>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="longitude" class="col-sm-3 col-form-label text-right">Longitude:</label>
+                <div class="col-sm-3">
+                    <input type="number" step="0.0001" class="form-control" id="longitude"
+                        name="location[coordinates][0]" required>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="description" class="col-sm-3 col-form-label text-right">Description:</label>
+                <div class="col-sm-9">
+                    <textarea class="form-control" id="description" rows="4" name="description" required></textarea>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="identification" class="col-sm-3 col-form-label text-right">Identification:</label>
+                <div class="col-sm-9">
+                    <textarea class="form-control" id="identification" rows="2" name="identification"></textarea>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="image" class="col-sm-3 col-form-label text-right">Image:</label>
+                <div class="col-sm-9">
+                    <input type="file" class="form-control-file" id="myImage" name="myImg" accept="images/*" required>
+                </div>
+            </div>
+            <div id="message" style="display: none;"></div>
+            <input type="submit" value="Add Sighting" id="g" class="btn btn-primary" />
+            <!-- <button type="submit" class="btn btn-primary">Submit</button> -->
+        </form>
+    </div>
+
+    <div id="results" class="container mt-2"></div>
+
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAdBS-npR2OeE_5APc2d1tZph55N0TpGfY&callback=initAutocomplete&libraries=places">
+    </script>
+    <script>
+        function back() {
+            window.location.href = "http://localhost:3000/"
+        }
+    </script>
+</body>
+
+</html>
