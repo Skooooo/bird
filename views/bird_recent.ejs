@@ -13,50 +13,25 @@
 <body>
     <%- include('../views/partials/header.ejs') %>
 
-    <div class="container">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th class="col1">Date/Time</th>
-                    <th class="col1">Identification</th>
-                    <th class="col2">User</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>2023-02-14 19:33:32</td>
-                    <td>Unknown</td>
-                    <td>Bob</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-<!--     
-    <div class="container">
-        <div id="sightings_card" class="row">
-
+    <div class="container mt-3">
+        <div class="card-deck">
             <% sightings.sort((a, b) => b.dateTimeSeen - a.dateTimeSeen).forEach(function(sighting) { %>
-            <div class="sighting" onclick="window.location.href='/sighting/<%= sighting._id %>'">
-
-                <div class="column">
-                    <a href="/sighting/<%= sighting._id %>">
-                        <div class="single_card">
-                            <div class="sighting_image">
-                                <img src="<%= sighting.img %>" alt="sighting image" style="height: 100%;">
-                            </div>
-                            <div class="sighting_info">
-                                <p>Date and Time: <%= sighting.dateTimeSeen.toLocaleString() %></p>
-                                <p>Identification: <%= sighting.identification %></p>
-                                <p>Nickname: <%= sighting.nickname %></p>
-                            </div>
-                        </div>
+            <div class="card mt-2" style="min-width: 30vh; max-width: 16rem;">
+                <img class="card-img-top" src="<%= sighting.img %>" alt="bird image">
+                <div class="card-body">
+                    <a class="card-title h5" href="/sighting/<%= sighting._id %>">
+                        <%= sighting.nickname %>
                     </a>
+                    <div class="card-text">
+                        <p>Date and Time: <%= sighting.dateTimeSeen.toLocaleString() %></p>
+                        <p>Identification: <%= sighting.identification %></p>
+                        <p>Nickname: <%= sighting.nickname %></p>
+                    </div>
                 </div>
-                <% }); %>
             </div>
-
+            <% }); %>
         </div>
-    </div> -->
+    </div>
 
     <%- include('../views/partials/footer.ejs') %>
 </body>

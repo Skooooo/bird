@@ -17,7 +17,11 @@
         <div class="row">
             <div class="justify-content-start col-6">
                 <label for="bird_name" class="col-9">
-                    <input type="button" id="bird_name" class="name_label" value="<%= sighting.nickname%>">
+                    <h2>Identification: <%= sighting.identification %>
+                        <br>
+                        <button onclick="window.location.href='/sighting/<%= sighting._id %>/update'">Update
+                            Identification</button>
+                    </h2>
                 </label>
                 <img class="col-10" src="<%= sighting.img %>" alt="bird image" style="height: 50vh;">
                 <div class="col-11 mt-3 border rounded h-50">
@@ -48,27 +52,31 @@
                 <div class="card col-12 mt-2">
                     <div class="card-body">
                         <h5 class="card-title">Description</h5>
-                        <p class="card-text"><%= sighting.description %></p>
+                        <p class="card-text">
+                            <% if (sighting.birdInfo) { %>
+                            <p><%= sighting.birdInfo.description %></p>
+                            <% } else { %>
+                            <p>No additional description available.</p>
+                            <% } %>
+                        </p>
                     </div>
                 </div>
 
                 <div class="card col-12 mt-2">
                     <div class="card-body">
                         <h5 class="card-title">Identification: </h5>
-                        <p class="card-text"><%= sighting.identification %></p>
-                    </div>
-                    <div class="card-footer">
-                        <button onclick="window.location.href='/sighting/<%= sighting._id %>/update'">Update
-                            Identification</button>
+                        <p class="card-text">
+                            <% if (sighting.birdInfo) { %>
+                            <p><%= sighting.birdInfo.name %></p>
+                            <a href="<%= sighting.birdInfo.uri %>">More information</a>
+                            <% } else { %>
+                            <p>No additional information available.</p>
+                            <% } %>
+                        </p>
                     </div>
                 </div>
             </div>
-
-
-
         </div>
-
-
     </div>
 
 
