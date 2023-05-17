@@ -55,11 +55,11 @@ function onSubmit() {
     const sightingsStore = transaction.objectStore("Sightings");  // Get the Sightings object store
     const addRequest = sightingsStore.add(sighting);  // Add the sighting to the store
     // Add event listener for successful addition
-    addRequest.addEventListener("success", ()=>{
+    addRequest.addEventListener("success", () => {
         addSighting("Added " + "#" + addRequest.result + ": " + sighting.nickname);
         const getRequest = sightingsStore.get(addRequest.result);  // Get the newly added sighting
         // Add event listener for successful retrieval
-        getRequest.addEventListener("success", ()=>{
+        getRequest.addEventListener("success", () => {
             addSighting("Found " + JSON.stringify(getRequest.result));
             insertSightingInList(getRequest.result);  // Insert the sighting into the list
         });

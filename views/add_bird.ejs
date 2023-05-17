@@ -45,7 +45,7 @@
                         <div id="map" class="justify-content-center col-sm-12" style="height: 80vh;"></div>
                         <div id="infowindow-content" hidden>
                             <span id="place-name" class="title"></span><br />
-                            <strong>Place ID:</strong> <span id="place-id"></span><br/>
+                            <strong>Place ID:</strong> <span id="place-id"></span><br />
                             <span id="place-address"></span>
                         </div>
                         <script src="/javascripts/map.js"></script>
@@ -98,6 +98,41 @@
     <script>
         function back() {
             window.location.href = "http://localhost:3000/"
+        }
+
+        function getdistance() {
+            const R = 6371; //Radius of the earth in km
+            const dist = document.getElementById('distance');
+            const longitude = document.getElementById('longitude').value;
+            const latitude = document.getElementById('latitude').value;
+            const a_lat = parseFloat(latitude).toFixed(4);
+            const a_lng = parseFloat(longitude).toFixed(4);
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const current_lat = position.coords.latitude;
+                        const current_lng = position.coords.longitude;
+
+                        const dLat = deg2rad(current_lat - a_lat);
+                        const dLng = deg2rad(current_lng - a_lng);
+                        const a =
+                            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                            Math.cos(deg2rad(a_lat)) * Math.cos(deg2rad(current_lat)) *
+                            Math.sin(dLng / 2) * Math.sin(dLng / 2);
+                        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                        const distance = R * c; // Distance in km
+                        
+                        dist.value = distance.toFixed(4);
+                    }
+                )
+            } else {
+                card.innerHTML = "Geolocation is not supported by this browser.";
+            }
+        }
+
+        function deg2rad(deg) {
+            return deg * (Math.PI / 180)
         }
     </script>
 </body>

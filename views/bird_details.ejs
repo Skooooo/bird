@@ -26,7 +26,7 @@
                 <img class="col-10" src="<%= sighting.img %>" alt="bird image" style="height: 50vh;">
                 <div class="col-11 mt-3 border rounded h-50">
                     <div class="header">Chat Room: </div>
-                    <div id="chat">w</div>
+                    <div id="chat"><%= sighting._id %></div>
                 </div>
 
             </div>
@@ -62,10 +62,20 @@
                     </div>
                 </div>
 
+                <div class="card col-12 mt-2">
+                    <div class="card-body">
+                        <h5 class="card-title">Identification: </h5>
+                        <p class="card-text">
+                            <% if (sighting.birdInfo) { %>
+                            <p><%= sighting.birdInfo.name %></p>
+                            <a href="<%= sighting.birdInfo.uri %>">More information</a>
+                            <% } else { %>
+                            <p>No additional information available.</p>
+                            <% } %>
+                        </p>
+                    </div>
+                </div>
             </div>
-
-
-
         </div>
     </div>
 
