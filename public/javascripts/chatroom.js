@@ -131,7 +131,41 @@ function sendAjaxQuery(url, data) {
     });
 }
 
+function sendDataToServer(data) {
+    const url = '/message'; // Replace with the actual URL of your server route
 
+    // Convert data to JSON string
+    const jsonData = JSON.stringify(data);
+
+    // Set up fetch request options
+    const options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: jsonData
+    };
+
+    // Send the fetch request
+    fetch(url, options)
+        .then(response => {
+            if (response.ok) {
+                // Handle success
+                return response.json();
+            } else {
+                // Handle error
+                throw new Error('Request failed');
+            }
+        })
+        .then(data => {
+            // Process the response data
+            console.log(data);
+        })
+        .catch(error => {
+            // Handle error
+            console.error(error);
+        });
+}
 
 function sendChatText() {
     const sightingId = 123;
@@ -149,7 +183,7 @@ function sendChatText() {
             "id": roomNo,
             "message": chatText
         }
-        sendAjaxQuery('/message', jsonData);
+        sendDataToServer(jsonData);
     } else{
         /* local storage */
         // const offlineMessages = JSON.parse(localStorage.getItem('offlineMessages')) || {};

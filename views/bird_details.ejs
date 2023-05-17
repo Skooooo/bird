@@ -44,11 +44,14 @@
             <img class="col-10" src="<%= sighting.img %>" alt="bird image" style="height: 50vh;">
             <div class="col-11 mt-3 border rounded h-50">
                 <div class="chatroom">
-                    <div class="header">Chat Room: </div>
+                    <div class="header">Comment Area: </div>
 <!--                    <div>-->
 <!--                        <div id="who_you_are" style="display: inline"></div>, you are in room: <div id="in_room" style="display: inline"></div>-->
 <!--                    </div>-->
-                    <div id="history" class="boxed"></div>
+                    <div id="history" class="boxed"> <% sighting.comments.forEach(function(msg) { %>
+                        <b><%= msg.text %></b><br>
+                        <% }); %>
+                    </div>
                     <div id="input" class="bottom">
                         <form onsubmit="return false;" style="width: 100%" id="messageForm" name="messageForm">
 <!--                            <p><label for="name"> Your name </label>-->
