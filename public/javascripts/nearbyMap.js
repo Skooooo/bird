@@ -8,6 +8,7 @@ navigator.geolocation.getCurrentPosition(
         const current_lng = position.coords.longitude;
         latitude.innerHTML = current_lat.toFixed(4);
         longitude.innerHTML = current_lng.toFixed(4);
+        getLocation()
     }
 )
 
@@ -35,7 +36,6 @@ function getLocation() {
         cords.innerHTML = distance;
         list.push({ distance: distance, id: id });
     }
-    // console.log(list)
 
     function deg2rad(deg) {
         return deg * (Math.PI / 180)
@@ -52,10 +52,8 @@ function getLocation() {
     while (switching && m<list.length) {
         switching = false;
         const b = card.getElementsByClassName("card mt-2");
-        // console.log(b.length);
         shouldSwitch = false;
         for (i = 0;i < b.length && !shouldSwitch;i++) {
-            // console.log(b[i]);
             var b_id = b[i].id;
             if (list[m].id == b_id) {
                 shouldSwitch = true;
@@ -72,8 +70,6 @@ function getLocation() {
             console.log(list[m].id+":"+m);
             m++;
         }
-        // console.log(switching);
-        // console.log(b[m]);
     }
 }
 
