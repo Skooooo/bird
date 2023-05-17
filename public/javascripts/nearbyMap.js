@@ -1,19 +1,28 @@
 const longitude = document.getElementById('longitude');
 const latitude = document.getElementById('latitude');
 const card = document.getElementById("card");
+const errorText = document.getElementById("errorText");
+
 
 navigator.geolocation.getCurrentPosition(
-    (position) => {
+    ((position) => {
         const current_lat = position.coords.latitude;
         const current_lng = position.coords.longitude;
         latitude.innerHTML = current_lat.toFixed(4);
         longitude.innerHTML = current_lng.toFixed(4);
         getLocation()
-    }
+    }),
+    ((error) => {
+        card.style.display = "none";
+        errorText.style.display = "flex";
+        console.log(errorText)
+    })
 )
+
 
 function getLocation() {
     card.style.display = "flex";
+    errorText.style.display = "none";
     const R = 6371;
     let list = [];
 
@@ -44,16 +53,16 @@ function getLocation() {
     list.sort((a, b) => (a.distance - b.distance));
     console.log(list)
 
-    
+
     var switching = true;
     var i = 0, shouldSwitch;
     var m = 0;
 
-    while (switching && m<list.length) {
+    while (switching && m < list.length) {
         switching = false;
         const b = card.getElementsByClassName("card mt-2");
         shouldSwitch = false;
-        for (i = 0;i < b.length && !shouldSwitch;i++) {
+        for (i = 0; i < b.length && !shouldSwitch; i++) {
             var b_id = b[i].id;
             if (list[m].id == b_id) {
                 shouldSwitch = true;
@@ -67,7 +76,7 @@ function getLocation() {
         if (shouldSwitch) {
             b[i].parentNode.insertBefore(b[i], b[m])
             switching = true;
-            console.log(list[m].id+":"+m);
+            console.log(list[m].id + ":" + m);
             m++;
         }
     }

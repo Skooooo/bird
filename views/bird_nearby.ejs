@@ -14,6 +14,7 @@
     <%- include('../views/partials/header.ejs') %>
 
     <div class="container mt-3">
+        <div id="errorText" style="display: none;">Geolocation is not supported by this browser.</div>
         <!-- <button type="button" onclick="getLocation()">Please Click to Get Your Location</button> -->
         <div id="latitude" hidden></div>
         <div id="longitude" hidden></div>
@@ -29,7 +30,6 @@
                     <div class="card-text">
                         <p>Date and Time: <%= sightings[i].dateTimeSeen.toLocaleString() %></p>
                         <p>Identification: <%= sightings[i].identification %></p>
-                        <p>Nickname: <%= sightings[i].nickname %></p>
                         <p id="lat<%=i%>" hidden><%=sightings[i].location.coordinates[1]%></p>
                         <p id="lng<%=i%>" hidden><%=sightings[i].location.coordinates[0]%></p>
                         <p id="id<%=i%>" hidden><%= sightings[i]._id %></p>
@@ -46,7 +46,6 @@
     <%- include('../views/partials/footer.ejs') %>
     <script src="/javascripts/nearbyMap.js"></script>
     <script>
-
 
     </script>
 </body>
