@@ -32,7 +32,6 @@ router.get("/", async function (req, res) {
   try {
     // Fetch all sightings from the database
     const sightings = await Sighting.find({});
-
     // Render the sightings_list view with the fetched data
     res.render("bird_list", { title: "", sightings });
   } catch (error) {
@@ -43,8 +42,23 @@ router.get("/", async function (req, res) {
   }
 });
 
+router.get('/nearby', async function (req, res) {
+  try {
+    // Fetch all sightings from the database, sorted by dateTimeSeen
+    const sightings = await Sighting.find({});
+    
+    // Render the bird_recent view with the fetched data
+    res.render('bird_nearby', { title: '', sightings });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error retrieving sightings from the database.');
+  }
+});
+
 // Recent bird route
-router.get("/recent", async function (req, res) {
+
+router.get('/recent', async function (req, res) {
+
   try {
     // Fetch all sightings from the database, sorted by dateTimeSeen
     const sightings = await Sighting.find({}).sort({ dateTimeSeen: -1 });
@@ -121,7 +135,9 @@ router.post("/add", upload.single("myImg"), async function (req, res) {
     // Save the new sighting to the database
     await newSighting.save();
     // Send a success message as the response
-    res.json({ message: "Success" });
+
+    res.json({ message: 'Success' });
+
   } catch (error) {
     // Log any errors to the console
     console.error(error);
@@ -243,7 +259,8 @@ router.post("/sighting/:id/update", async function (req, res) {
 });
 
 //get knowledge graph
-router.get("/sighting/:id", function (req, res, next) {
+router.get('/sighting/:id', function (req, res, next) {
+
   // Fetch the sighting from your database...
   // Then fetch the bird information from DBpedia:
   const resource = `http://dbpedia.org/resource/${sighting.identification}`;
@@ -263,16 +280,25 @@ router.get("/sighting/:id", function (req, res, next) {
   // retrieving data from dbpedia
   // if the data returned, render the page sighting
   fetch(url)
-      .then((response) => response.json())
-      .then((data) => {
-        // Extract the bird information from the data...
-        const bird = data.results.bindings[0];
-        res.render("sighting", {
-          title: "Sighting",
-          sighting: sighting,
-          bird: bird,
-        });
+
+    .then(response => response.json())
+    .then(data => {
+      // Extract the bird information from the data...
+      const bird = data.results.bindings[0];
+      res.render('sighting', {
+        title: 'Sighting',
+        sighting: sighting,
+        bird: bird
+
+
       });
+    });
 });
+
+
+router.get('/index', function (req, res) {
+  res.render('index', { title: 'Show map' });
+});
+
 
 module.exports = router;

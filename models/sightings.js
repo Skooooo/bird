@@ -30,14 +30,14 @@ var SightingSchema = new Schema(
         description: { type: String, required: true },  // Description of the sighting
         identification: { type: String, default: 'Unknown' },  // Identification of the sighting, defaults to 'Unknown'
         dbpediaURI: String,  // URI for additional info
-        img: {type: String },  // Path to image
+        img: { type: String },  // Path to image
         nickname: { type: String, required: true },  // Nickname of the poster
         comments: [commentSchema]  // List of comments on the sighting
     }
 );
 
 // Enable getters and virtuals when converting to Objects
-SightingSchema.set('toObject', {getters: true, virtuals: true});
+SightingSchema.set('toObject', { getters: true, virtuals: true });
 
 // Index location as a 2dsphere for geospatial queries
 SightingSchema.index({ location: '2dsphere' });
