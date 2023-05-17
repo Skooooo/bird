@@ -29,7 +29,7 @@
 </head>
 
 
-<body onload="init()" >
+<body onload="init('<%= sighting._id %>','<%= sighting.nickname %>')" >
 <%- include('../views/partials/header.ejs') %>
 <div class="container mt-3">
     <div class="row">
@@ -50,14 +50,14 @@
 <!--                    </div>-->
                     <div id="history" class="boxed"></div>
                     <div id="input" class="bottom">
-                        <form onsubmit="return false;" style="width: 100%">
+                        <form onsubmit="return false;" style="width: 100%" id="messageForm" name="messageForm">
 <!--                            <p><label for="name"> Your name </label>-->
 <!--                                <input type="text" id="name" name="name">-->
 <!--                            </p>-->
                             <p>
-                                <label for="name"> chat: </label>
+                                <label> chat: </label>
                                 <input type="text" id="chat_input" name="chat_input" style="width: 80%">
-                                <button id="chat_send" onclick="sendChatText()">Send</button>
+                                <button type="submit" id="chat_send" onclick="sendChatText()">Send</button>
                             </p>
                         </form>
                     </div>

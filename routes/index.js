@@ -4,6 +4,7 @@ var multer = require('multer');
 const Sighting = require('../models/sightings'); // Require the Sighting model
 const fetch = require('node-fetch');
 const SPARQL_URL = 'https://dbpedia.org/sparql';
+const bodyParser = require('body-parser');
 
 // Configure multer storage options
 var storage = multer.diskStorage({
@@ -97,6 +98,7 @@ router.post('/add', upload.single('myImg'), async function (req, res) {
 // Bird details/dbpedia
 router.get('/sighting/:id', async function (req, res, next) {
   try {
+
     const sightingId = req.params.id;
     const sighting = await Sighting.findById(sightingId);
     if (sighting) {
@@ -136,6 +138,7 @@ router.get('/sighting/:id', async function (req, res, next) {
 });
 
 
+
 //update identification
 router.get('/sighting/:id/update', async function (req, res, next) {
   try {
@@ -154,6 +157,7 @@ router.get('/sighting/:id/update', async function (req, res, next) {
 //post identification
 router.post('/sighting/:id/update', async function (req, res) {
   try {
+
     const sightingId = req.params.id;
     const newIdentification = req.body.identification;
     const posterId = req.body.posterId;
@@ -172,6 +176,34 @@ router.post('/sighting/:id/update', async function (req, res) {
         res.status(403).send('Unauthorized to update this sighting');
       }
     } else {
+      res.status(404).send('Sighting not found');
+    }
+  } catch (err) {
+    res.status(500).send(`Error: ${err.message}`);
+  }
+});
+
+// // Parse JSON bodies
+// router.use(bodyParser.json());
+
+// post messages
+router.post('/message', async function(req, res)  {
+
+  console.log("%%%%%%%%%%%%%%%%%%%%%");
+
+  console.log('Request body:', req.body);
+  try{
+    const sightingId = req.params.id;
+    const message = req.body;
+    const sighting = await Sighting.findById(sightingId);
+
+    if(sighting){
+
+      sighting.comments.add(message);
+      await sighting.save();
+      res.json(sighting);
+
+    }else {
       res.status(404).send('Sighting not found');
     }
   } catch (err) {
@@ -211,9 +243,5 @@ router.get('/sighting/:id', function(req, res, next) {
         });
       });
 });
-
-
-
-
 
 module.exports = router;
