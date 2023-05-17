@@ -14,13 +14,13 @@
     <%- include('../views/partials/header.ejs') %>
 
     <div class="container mt-3">
-        <button type="button" onclick="getLocation()">Get Your location</button>
+        <button type="button" onclick="getLocation()">Please Click to Get Your Location</button>
         <div id="latitude" hidden></div>
         <div id="longitude" hidden></div>
-        <div class="card-deck" id="card">
+        <div class="card-deck" id="card" style="display: none;">
             <div id="length" hidden><%=sightings.length%></div>
             <% for(var i=0; i<sightings.length; i++) { %>
-            <div class="card mt-2" style="min-width: 30vh; max-width: 16rem;">
+            <div class="card mt-2" style="min-width: 30vh; max-width: 16rem;" id="<%= sightings[i]._id %>">
                 <img class="card-img-top" src="<%= sightings[i].img %>" alt="bird image">
                 <div class="card-body">
                     <a class="card-title h5" href="/sighting/<%= sightings[i]._id %>">
@@ -30,10 +30,10 @@
                         <p>Date and Time: <%= sightings[i].dateTimeSeen.toLocaleString() %></p>
                         <p>Identification: <%= sightings[i].identification %></p>
                         <p>Nickname: <%= sightings[i].nickname %></p>
-                        <p id="lat<%=i%>"><%=sightings[i].location.coordinates[1]%></p>
-                        <p id="lng<%=i%>"><%=sightings[i].location.coordinates[0]%></p>
-                        <p id="id<%=i%>"><%= sightings[i]._id %></p>
-                        <p id="dis<%=i%>"></p>
+                        <p id="lat<%=i%>" hidden><%=sightings[i].location.coordinates[1]%></p>
+                        <p id="lng<%=i%>" hidden><%=sightings[i].location.coordinates[0]%></p>
+                        <p id="id<%=i%>" hidden><%= sightings[i]._id %></p>
+                        <p id="dis<%=i%>" hidden></p>
                     </div>
                 </div>
             </div>

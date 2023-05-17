@@ -1,5 +1,6 @@
 const longitude = document.getElementById('longitude');
 const latitude = document.getElementById('latitude');
+const card = document.getElementById("card");
 
 navigator.geolocation.getCurrentPosition(
     (position) => {
@@ -11,6 +12,7 @@ navigator.geolocation.getCurrentPosition(
 )
 
 function getLocation() {
+    card.style.display = "flex";
     const R = 6371;
     let list = [];
 
@@ -39,42 +41,39 @@ function getLocation() {
         return deg * (Math.PI / 180)
     }
 
+    list.sort((a, b) => (a.distance - b.distance));
     console.log(list)
 
-    const card = document.getElementById("card");
+    
     var switching = true;
-    var i, b, shouldSwitch = false;
+    var i = 0, shouldSwitch;
     var m = 0;
 
-    while (switching&&!shouldSwitch) {
+    while (switching && m<list.length) {
         switching = false;
-        b = card.getElementsByClassName("card mt-2");
+        const b = card.getElementsByClassName("card mt-2");
         // console.log(b.length);
-        for (i = 0;i < (b.length-1)&&!shouldSwitch;i++) {
-            shouldSwitch = false;
+        shouldSwitch = false;
+        for (i = 0;i < b.length && !shouldSwitch;i++) {
             // console.log(b[i]);
-            const b_id = document.getElementById("id" + i).innerHTML;
-            if (list[i].distance > list[i+1].distance) {
+            var b_id = b[i].id;
+            if (list[m].id == b_id) {
                 shouldSwitch = true;
-                // console.log(list[i].distance + ":" + list[i+1].distance);
-
+                console.log(b[i]);
+                console.log(b_id + ":" + i);
                 break;
             }
-            console.log(i);
+            console.log(b[i]);
         }
         console.log(i);
         if (shouldSwitch) {
-            b[i].parentNode.insertBefore(b[m], b[i])
+            b[i].parentNode.insertBefore(b[i], b[m])
             switching = true;
-            shouldSwitch = false;
-            // console.log(list[m].id+":"+m);
-            // console.log(b[m]);
-            // console.log(b[i])
+            console.log(list[m].id+":"+m);
             m++;
         }
-        console.log("2."+b[i]);
-        
-        // console.log(list[m].id);
+        // console.log(switching);
+        // console.log(b[m]);
     }
 }
 
