@@ -16,12 +16,10 @@
     <div class="container mt-3">
         <div class="row">
             <div class="justify-content-start col-6">
-                <label for="bird_name" class="col-9">
-                    <h2>Identification: <%= sighting.identification %>
-                        <br>
-                        <button onclick="window.location.href='/sighting/<%= sighting._id %>/update'">Update
-                            Identification</button>
-                    </h2>
+                <label for="bird_name" class="col-9 mt-2">
+                    <button class="btn btn-primary"
+                        onclick="window.location.href='/sighting/<%= sighting._id %>/update'">Update
+                        Identification</button>
                 </label>
                 <img class="col-10" src="<%= sighting.img %>" alt="bird image" style="height: 50vh;">
                 <div class="col-11 mt-3 border rounded h-50">
@@ -42,7 +40,8 @@
                 <div class="card col-12 mt-2">
                     <div class="card-body">
                         <h5 class="card-title">Location</h5>
-                        <div class="card-text" id="map" style="height: 350px;"></div>
+                        <div id="address"></div>
+                        <div class="card-text mt-2" id="map" style="height: 350px;"></div>
                         <div class="card-text" id="lat" hidden><%=sighting.location.coordinates[1]%></div>
                         <div class="card-text" id="lng" hidden><%=sighting.location.coordinates[0]%></div>
                         <script src="/javascripts/showMap.js"></script>
@@ -66,6 +65,7 @@
                     <div class="card-body">
                         <h5 class="card-title">Identification: </h5>
                         <p class="card-text">
+                            <p><%= sighting.identification %></p>
                             <% if (sighting.birdInfo) { %>
                             <p><%= sighting.birdInfo.name %></p>
                             <a href="<%= sighting.birdInfo.uri %>">More information</a>
