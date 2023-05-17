@@ -1,9 +1,11 @@
 var express = require("express");
 var router = express.Router();
-var multer = require("multer");
-const Sighting = require("../models/sightings"); // Require the Sighting model
-const fetch = require("node-fetch");
-const SPARQL_URL = "https://dbpedia.org/sparql";
+var multer = require('multer');
+const Sighting = require('../models/sightings'); // Require the Sighting model
+const fetch = require('node-fetch');
+const SPARQL_URL = 'https://dbpedia.org/sparql';
+const mongoose = require('mongoose');
+const { ObjectId } = mongoose.Types;
 
 // Configure multer storage options
 var storage = multer.diskStorage({
@@ -149,6 +151,7 @@ router.post("/add", upload.single("myImg"), async function (req, res) {
 // Bird details/dbpedia
 router.get("/sighting/:id", async function (req, res, next) {
   try {
+
     // retrieving sightingId from request params
     const sightingId = req.params.id;
     // searching entry from the database by id
@@ -202,6 +205,7 @@ router.get("/sighting/:id", async function (req, res, next) {
   }
 });
 
+
 //update identification
 router.get("/sighting/:id/update", async function (req, res, next) {
   try {
@@ -227,9 +231,7 @@ router.get("/sighting/:id/update", async function (req, res, next) {
 //post identification
 router.post("/sighting/:id/update", async function (req, res) {
   try {
-    // generate sightingId from request params
-    // retrieving newIdentification, posterId from req.body
-    const { newIdentification, posterId } = req.body;
+
     const sightingId = req.params.id;
 
     // Fetch the sighting from the database
@@ -257,6 +259,52 @@ router.post("/sighting/:id/update", async function (req, res) {
     res.status(500).send(`Error: ${err.message}`);
   }
 });
+
+// // Parse JSON bodies
+// router.use(bodyParser.json());
+
+// post messages
+router.post('/message', async function(req, res)  {
+
+  console.log("%%%%%%%%%%%%%%%%%%%%%");
+
+  console.log('Request body:', req.body);
+  // try{
+  //   const sightingId = req.body.id;
+  //   const message = req.body.message;
+  //   const sighting = await Sighting.findById(sightingId);
+  //
+  //   if(sighting){
+  //     console.log("^^^^^^^^^^^^^^^^^^");
+  //     sighting.comments.add(message);
+  //     // const arr =
+  //     // sighting.comments = message;
+  //     await sighting.save();
+  //     res.json(sighting);
+  //
+  //   }else {
+  //     res.status(404).send('Sighting not found');
+  //   }
+  // } catch (err) {
+  //   res.status(500).send(`Error: ${err.message}`);
+  // }
+
+  // const convertedObjectId = mongoose.Types.ObjectId(req.body.id);
+  const convertedObjectId = new ObjectId(req.body.id);
+  console.log("objectId: ", convertedObjectId);
+  const comment = {text: req.body.message};
+  Sighting.updateOne(
+      { _id: convertedObjectId },
+      { $push: { comments:  comment} }
+  )
+      .then(() => {
+        console.log('Array updated successfully');
+      })
+      .catch((error) => {
+        console.error('Error updating array:', error);
+      });
+});
+
 
 //get knowledge graph
 router.get('/sighting/:id', function (req, res, next) {
@@ -296,9 +344,7 @@ router.get('/sighting/:id', function (req, res, next) {
 });
 
 
-router.get('/index', function (req, res) {
-  res.render('index', { title: 'Show map' });
-});
+
 
 
 module.exports = router;

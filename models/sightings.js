@@ -6,9 +6,9 @@ var Schema = mongoose.Schema;
 
 // Define a new schema for comments
 const commentSchema = new Schema({
-    nickname: { type: String, required: true },  // Nickname of the commenter
+    // nickname: { type: String, required: true },  // Nickname of the commenter
     text: { type: String, required: true },  // Comment text
-    createdAt: { type: Date, default: Date.now }  // Time the comment was created
+    // createdAt: { type: Date, default: Date.now }  // Time the comment was created
 });
 
 // Define a new schema for sightings
