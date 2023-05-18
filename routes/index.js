@@ -231,8 +231,9 @@ router.get("/sighting/:id/update", async function (req, res, next) {
 //post identification
 router.post("/sighting/:id/update", async function (req, res) {
   try {
-
     const sightingId = req.params.id;
+    const newIdentification = req.body.identification;
+    const posterId = req.body.posterId;
 
     // Fetch the sighting from the database
     const sighting = await Sighting.findById(sightingId);
@@ -243,21 +244,18 @@ router.post("/sighting/:id/update", async function (req, res) {
         // Update the sighting
         sighting.identification = newIdentification;
         await sighting.save();
-        res.json(sighting);
+
+        res.redirect(`/sighting/${sightingId}`);
       } else {
-        // if the entry id does not match
-        // render the page of 403 with prompt
-        res.status(403).send("Unauthorized to update this sighting");
+        res.status(403).send('Unauthorized to update this sighting');
       }
     } else {
-      // if the entry does not exist in the database
-      // render the page of 404 with prompt
-      res.status(404).send("Sighting not found");
+      res.status(404).send('Sighting not found');
     }
   } catch (err) {
-    // if error detected, render 500 page with prompt
     res.status(500).send(`Error: ${err.message}`);
   }
+
 });
 
 // // Parse JSON bodies
