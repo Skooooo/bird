@@ -1,8 +1,4 @@
-/**
- * Function to send an AJAX request
- * @param {*} url the url to send data
- * @param {*} data the data itself
- */
+// Function to send an AJAX request
 function sendAjaxQuery(url, data) {
     $.ajax({
         url: url,  // URL to send request to
@@ -25,10 +21,7 @@ function sendAjaxQuery(url, data) {
     });
 }
 
-/**
- * Function to handle form submission
- * @returns false
- */
+// Function to handle form submission
 function onSubmit() {
     event.preventDefault();  // Prevent form submission
     event.stopImmediatePropagation();  // Stop any other event handlers from being called

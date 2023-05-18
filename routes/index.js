@@ -85,7 +85,6 @@ router.get("/add", function (req, res) {
   res.render("add", { title: "Add a new Sighting to the DB" });
 });
 
-
 /**
  *
  * @param {*} file img file
@@ -265,31 +264,8 @@ router.post("/sighting/:id/update", async function (req, res) {
 
 // post messages
 router.post('/message', async function(req, res)  {
-
-  console.log("%%%%%%%%%%%%%%%%%%%%%");
-
   console.log('Request body:', req.body);
-  // try{
-  //   const sightingId = req.body.id;
-  //   const message = req.body.message;
-  //   const sighting = await Sighting.findById(sightingId);
-  //
-  //   if(sighting){
-  //     console.log("^^^^^^^^^^^^^^^^^^");
-  //     sighting.comments.add(message);
-  //     // const arr =
-  //     // sighting.comments = message;
-  //     await sighting.save();
-  //     res.json(sighting);
-  //
-  //   }else {
-  //     res.status(404).send('Sighting not found');
-  //   }
-  // } catch (err) {
-  //   res.status(500).send(`Error: ${err.message}`);
-  // }
 
-  // const convertedObjectId = mongoose.Types.ObjectId(req.body.id);
   const convertedObjectId = new ObjectId(req.body.id);
   console.log("objectId: ", convertedObjectId);
   const comment = {text: req.body.message};
@@ -342,9 +318,5 @@ router.get('/sighting/:id', function (req, res, next) {
       });
     });
 });
-
-
-
-
 
 module.exports = router;

@@ -1,19 +1,17 @@
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-  integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
-  integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
-  integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
 <script src="/javascripts/add.js"></script>
-<script src="/javascripts/map.js"></script>
 <script src="/javascripts/indexedDB.js"></script>
 
-<nav class="navbar navbar-expand-lg bg-light navbar-light justify-content-between">
+<nav class="navbar navbar-expand-lg navbar-light justify-content-between bg-dark" style="font-weight: bold;">
   <div class="container">
-    <h1 class="navbar-brand mb-0 h1">Bird Sightings</h1>
+    <h1 class="navbar-brand mb-0 h1" style=" color: white; ">Bird Sightings</h1>
 
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menu">
       <span class="navbar-toggler-icon"></span>
@@ -22,17 +20,20 @@
     <div class="collapse navbar-collapse justify-content-end" id="menu">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a href="/" class="nav-link">List</a>
+          <a href="/" class="nav-link" style=" color: white; ">List</a>
         </li>
         <li class="nav-item">
-          <a href="/recent" class="nav-link">Recent</a>
+          <a href="/recent" class="nav-link" style=" color: white; ">Recent</a>
         </li>
         <li class="nav-item">
-          <a href="/nearby" class="nav-link">Nearby</a>
+          <a href="/nearby" class="nav-link" style=" color: white; ">Nearby</a>
         </li>
       </ul>
       <div class=" d-flex align-items-center">
-          <button type="button" onclick="goAdd()" class="nav-link">Add a Sighting</button>
+        <button type="button" onclick="goAdd()" class="nav-link"
+          style="border: none; color: antiquewhite; background-color: inherit; cursor: pointer;">
+          Add a Sighting
+        </button>
       </div>
     </div>
   </div>

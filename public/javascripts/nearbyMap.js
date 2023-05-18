@@ -51,8 +51,6 @@ function getLocation() {
     }
 
     list.sort((a, b) => (a.distance - b.distance));
-    console.log(list)
-
 
     var switching = true;
     var i = 0, shouldSwitch;
@@ -66,17 +64,12 @@ function getLocation() {
             var b_id = b[i].id;
             if (list[m].id == b_id) {
                 shouldSwitch = true;
-                console.log(b[i]);
-                console.log(b_id + ":" + i);
                 break;
             }
-            console.log(b[i]);
         }
-        console.log(i);
         if (shouldSwitch) {
             b[i].parentNode.insertBefore(b[i], b[m])
             switching = true;
-            console.log(list[m].id + ":" + m);
             m++;
         }
     }

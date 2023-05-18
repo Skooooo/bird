@@ -2,8 +2,6 @@
 let name = null;
 let roomNo = null;
 let socket = io();
-// let id = 0;
-
 
 /**
  * called by <body onload>
@@ -23,14 +21,6 @@ function init(id,nickname) {
     // called when someone joins the room. If it is someone else it notifies the joining of the room
     socket.on('joined', function (room, userId) {
 
-        // if (userId === name) {
-        //     // it enters the chat
-        //     hideLoginInterface(room, userId);
-        // }
-        // else {
-        //     // notifies that someone has joined the room
-        //     writeOnHistory('<b>'+userId+'</b>' + ' joined room ' + room, true);
-        // }
     });
     // called when a message is received
     socket.on('chat', function (room, userId, chatText) {
@@ -38,10 +28,6 @@ function init(id,nickname) {
         // if (userId === name) who = 'Me:';
         writeOnHistory('<b>' + chatText + '</b>', true);
     });
-
-    // document.getElementById('who_you_are').innerHTML= userId;
-    // document.getElementById('in_room').innerHTML= ' '+room;
-
 }
 
 const openDB = () => {
@@ -63,52 +49,6 @@ const openDB = () => {
     });
 };
 
-// const { MongoClient } = require('mongodb');
-//
-// // Connection URL
-// const url = 'mongodb+srv://Team6:Team6@cluster0.7ydimha.mongodb.net/sightings?retryWrites=true&w=majority';
-//
-// // Create a new MongoClient
-// const client = new MongoClient(url, { useUnifiedTopology: true });
-
-// // Define the filter and update values
-// const filter = { key: 'value' }; // Filter to identify the document(s) to update
-// const update = { $set: { comments: 'updatedValue' } };
-
-// Retrieve a specific key value
-// async function retrieveValue() {
-//     try {
-//         // Connect to the MongoDB database
-//         await client.connect();
-//
-//         // Specify the database and collection name
-//         const database = client.db('sightings');
-//         const collection = database.collection('sightings');
-//
-//         // Find the document and retrieve the specific key value
-//         const document = await collection.findOne({}, { projection: { key: 1 } });
-//
-//         // Extract the value from the document
-//         const value = document.key;
-//
-//         console.log('Retrieved value:', value);
-//     } catch (error) {
-//         console.error('Failed to retrieve value:', error);
-//     } finally {
-//         // Close the connection
-//         await client.close();
-//     }
-// }
-
-// const express = require('express');
-// const app = express();
-//
-// app.get('/', (req, res) => {
-//     const href = req.url;
-//     res.send(`Current href: ${href}`);
-//     console.log(href);
-// });
-
 function sendAjaxQuery(url, data) {
     $.ajax({
         url: url,  // URL to send request to
@@ -121,7 +61,6 @@ function sendAjaxQuery(url, data) {
             // Show an alert that the sighting was added successfully
             alert('Sightings added successfully!');
             // Reset the form
-            $('#xForm').trigger('reset');
             window.location.reload();
         },
         error: function (xhr, status, error) {  // Function to call on failed request
@@ -173,11 +112,7 @@ function sendChatText() {
     // name = document.getElementById('name').value;
     if(navigator.onLine){
         socket.emit('chat', roomNo, "", chatText);
-        // event.preventDefault();  // Prevent form submission
-        // event.stopImmediatePropagation();  // Stop any other event handlers from being called
-        // var myForm = document.getElementById('messageForm');  // Get the form element
-        // var formData = new FormData(myForm);  // Create FormData from the form
-        // console.log("form data: ", formData);
+
         console.log("message: ", chatText);
         const jsonData = {
             "id": roomNo,
@@ -185,12 +120,6 @@ function sendChatText() {
         }
         sendDataToServer(jsonData);
     } else{
-        /* local storage */
-        // const offlineMessages = JSON.parse(localStorage.getItem('offlineMessages')) || {};
-        // offlineMessages[sightingId] = offlineMessages[sightingId] || [];
-        // offlineMessages[sightingId].push(chatText);
-        // localStorage.setItem('offlineMessages', JSON.stringify(offlineMessages));
-        // writeOnHistory('<b>' + 'Me' + ':</b> ' + chatText + ' (pending online...)',false);
 
         /* indexDB */
         // Store a message in the database
@@ -228,17 +157,6 @@ function sendChatText() {
 
 function syncOfflineMessages() {
     const sightingId = 123;
-    /* local storage */
-    // const offlineMessages = JSON.parse(localStorage.getItem('offlineMessages')) || {};
-    // name = document.getElementById('name').value;
-    // Object.entries(offlineMessages).forEach(([sightingId, messages]) => {
-    //     messages.forEach((message) => {
-    //         clearOnHistory();
-    //         console.log("***********");
-    //         socket.emit('chat', roomNo, name, message);
-    //     });
-    // });
-    // localStorage.removeItem('offlineMessages');
 
     /* indexDB */
     // Retrieve all stored messages from the database
@@ -305,9 +223,6 @@ window.addEventListener('online', syncOfflineMessages);
  * interface
  */
 function connectToRoom() {
-    // roomNo = document.getElementById('roomNo').value;
-    // name = document.getElementById('name').value;
-    // if (!name) name = 'Unknown-' + Math.random();
     name = "user";
     socket.emit('create or join', roomNo, name);
 }
@@ -338,15 +253,10 @@ function writeOnHistory(text, isOnline) {
 
 function clearOnHistory() {
 
-    // let history = document.getElementById('history');
-
     let paragraph = document.getElementById('offline');
 
-    // paragraph.innerHTML = text;
     console.log("paragraph");
     console.log(paragraph);
-    // console.log("history");
-    // console.log(history);
 
     paragraph.parentNode.removeChild(paragraph);
 
@@ -355,17 +265,5 @@ function clearOnHistory() {
     document.getElementById('chat_input').value = ''; // clear input field
 }
 
-
-/**
- * it hides the initial form and shows the chat
- * @param room the selected room
- * @param userId the user name
- */
-// function hideLoginInterface(room, userId) {
-//     // document.getElementById('initial_form').style.display = 'none';
-//     // document.getElementById('chat_interface').style.display = 'block';
-//     document.getElementById('who_you_are').innerHTML= userId;
-//     document.getElementById('in_room').innerHTML= ' '+room;
-// }
 
 

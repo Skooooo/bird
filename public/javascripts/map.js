@@ -31,8 +31,7 @@ async function initAutocomplete() {
                     }; // get your current location as a coords with lat and lng
                     infoWindow.setPosition(pos); // info window will show at a coords of your current location on google map
                     infowindowContent.children.namedItem("place-name").textContent = "";
-                    infowindowContent.children.namedItem("place-id").textContent = "latitude: " + pos.lat + " longitude: " + pos.lng;
-                    infowindowContent.children.namedItem("place-address").textContent = "";
+                    infowindowContent.children.namedItem("place-address").textContent = "latitude: " + pos.lat + " longitude: " + pos.lng;
                     infoWindow.setContent(infowindowContent); // set a content of info window
                     infoWindow.open(map); // display it on map
                     map.setCenter(pos); // set the map center on your current location 
@@ -122,8 +121,6 @@ async function initAutocomplete() {
 
             // set content of info window
             infowindowContent.children.namedItem("place-name").textContent = place.name;
-            infowindowContent.children.namedItem("place-id").textContent =
-                place.place_id;
             infowindowContent.children.namedItem("place-address").textContent =
                 place.formatted_address;
             infoWindow.open(map, marker);
