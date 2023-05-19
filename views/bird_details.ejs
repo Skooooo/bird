@@ -2,34 +2,34 @@
 <html>
 
 <head>
-    <title><%= title %></title>
-    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-    <script src="/javascripts/chatroom.js"></script>
+        <title><%= title %></title>
+        <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+        <link rel='stylesheet' href='/stylesheets/style.css' />
+        <script src="/javascripts/chatroom.js"></script>
 
-    <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <script src="http://maps.googleapis.com/maps/api/js">
-    </script>
+        <link rel="stylesheet"
+              href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+        <script src="http://maps.googleapis.com/maps/api/js">
+        </script>
 
-    <script>
-        function initialize() {
-            var mapProp = {
-                center: new google.maps.LatLng(51.508742, -0.120850),
-                zoom: 5,
-                mapTypeId: google.maps.MapTypeId.ROADMAP
-            };
-            var map = new google.maps.Map(document.getElementById("map"), mapProp);
-        }
-        google.maps.event.addDomListener(window, 'load', initialize);
-    </script>
-</head>
+        <script>
+            function initialize() {
+                var mapProp = {
+                    center: new google.maps.LatLng(51.508742, -0.120850),
+                    zoom: 5,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                };
+                var map = new google.maps.Map(document.getElementById("map"), mapProp);
+            }
+            google.maps.event.addDomListener(window, 'load', initialize);
+        </script>
+    </head>
 
 
-<body style="display: flex; flex-direction: column; min-height: 100vh;"
-      onload="init('<%= sighting._id %>','<%= sighting.nickname %>')">
-      <%- include('../views/partials/header.ejs') %>
-      <div style="flex:1;">
+    <body style="display: flex; flex-direction: column; min-height: 100vh;"
+          onload="init('<%= sighting._id %>','<%= sighting.nickname %>')">
+    <%- include('../views/partials/header.ejs') %>
+    <div style="flex:1;">
         <div class="container mt-3">
             <div class="row">
                 <div class="justify-content-start col-6">
@@ -140,7 +140,7 @@
     </script>
 
 
-    <%- include('../views/partials/footer.ejs') %>
+<%- include('../views/partials/footer.ejs') %>
 
 </body>
 

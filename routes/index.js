@@ -60,7 +60,7 @@ db.once("close", () => {
 });
 
 const Sightings = mongoose.model("sighting_lists", sightingSchema);
-let dbData = {};
+let dbData = [];
 let data;
 /**
  * getting all entries from database
@@ -91,24 +91,23 @@ const createEntry = async (params) => {
    * if the saving action is failed,
    * return false to render db_failed to initialize the process of saving data to offline database
    */
+
+  //return false
   let res = true;
 
   sighting
-    .save()
-    .then(() => {
-      // 建议：不管是现在用 nodejs 还是之后用 react 或者 vue 用 JS 语言读未知参数
-      // 对象之后加一个?，这个时候如果你读不到，就不会报错了
-      console.log(params?.nickname, "has been successfully added to database");
-      saveFlag = true;
-      return true;
-    })
-    .catch((e) => {
-      console.error("error happened");
-      console.error(e);
-      res = false;
-    });
+      .save()
+      .then(() => {
+        console.log(params?.nickname, "has been successfully added to database");
+        saveFlag = true;
+        res = true;
+      })
+      .catch((e) => {
+        console.error("error happened");
+        console.error(e);
+        res = false;
+      });
   return res;
-  //return false;
 };
 
 // Configure multer storage options
@@ -116,7 +115,7 @@ var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "public/uploads/");
   },
-  // 图片名字
+  // image name
   filename: function (req, file, cb) {
     // Get the original image name, i.e. what the image was called when the user uploaded it
     var original = file.originalname;
@@ -130,13 +129,16 @@ var storage = multer.diskStorage({
   },
 });
 
-// Set the instance object for the upload, which is used to call the storage object to save the image
-var upload = multer({ storage: storage });
+// // Set the instance object for the upload, which is used to call the storage object to save the image
+// var upload = multer({ storage: storage });
 
 // Bird list route
 router.get("/", async function (req, res) {
-  console.log(dbData);
+  if (dbData?.length > 0) {
+    const uniq = new Set(dbData.map((e) => JSON.stringify(e)));
 
+    dbData = Array.from(uniq).map((e) => JSON.parse(e));
+  }
   try {
     // Fetch all sightings from the database
     // const sightings = await Sighting.find({});
@@ -154,33 +156,34 @@ router.get("/", async function (req, res) {
 });
 
 router.get("/nearby", async function (req, res) {
-  try {
-    // Fetch all sightings from the database, sorted by dateTimeSeen
-    const sightings = await Sighting.find({});
+  res.render("bird_nearby", { title: "nearBy", sightings: dbData.reverse() });
+  // try {
+  //   // Fetch all sightings from the database, sorted by dateTimeSeen
+  //   const sightings = await Sightings.find({});
 
-    // Render the bird_recent view with the fetched data
-    res.render("bird_nearby", { title: "", sightings });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Error retrieving sightings from the database.");
-  }
+  //   // Render the bird_recent view with the fetched data
+  //   res.render("bird_nearby", { title: "", sightings: dbData });
+  // } catch (error) {
+  //   console.error(error);
+  //   res.status(500).send("Error retrieving sightings from the database.");
+  // }
 });
 
 // Recent bird route
 
 router.get("/recent", async function (req, res) {
-  try {
-    // Fetch all sightings from the database, sorted by dateTimeSeen
-    const sightings = await Sighting.find({}).sort({ dateTimeSeen: -1 });
-
-    // Render the bird_recent view with the fetched data
-    res.render("bird_recent", { title: "", sightings });
-  } catch (error) {
-    // print error message in the console
-    console.error(error);
-    // rendering error page with promopt
-    res.status(500).send("Error retrieving sightings from the database.");
-  }
+  // try {
+  //   // Fetch all sightings from the database, sorted by dateTimeSeen
+  //   const sightings = await Sighting.find({}).sort({ dateTimeSeen: -1 });
+  //
+  //   // Render the bird_recent view with the fetched data
+  //   res.render("bird_recent", { title: "", sightings });
+  // } catch (error) {
+  //   // print error message in the console
+  //   console.error(error);
+  //   // rendering error page with promopt
+  //   res.status(500).send("Error retrieving sightings from the database.");
+  // }
 });
 
 router.get("/add_bird", function (req, res) {
@@ -230,7 +233,6 @@ router.post("/add", async (req, res) => {
     myImg,
     img,
   } = req.body;
-  console.warn("🚀 ~ file: index.js:224 ~ router.post ~ myImg:", myImg, img);
   // Create a new sighting object from the request body
   const newSighting = new Sightings({
     identification,
@@ -266,7 +268,10 @@ router.post("/add", async (req, res) => {
     datetime: new Date(),
   };
 
-  if (await createEntry(newSighting)) {
+  const createRes = await createEntry(newSighting);
+  console.warn("🚀 ~ file: index.js:267 ~ router.post ~ createRes:", createRes);
+
+  if (createRes) {
     console.log("Creating successfully");
     dbData.push(savingData);
     res.render("bird_list", { title: "Bird_list", sightings: dbData });

@@ -7,6 +7,9 @@
     <list default="true" id="fa7cc5ac-b093-436d-8b96-6742fd080bb2" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/add_bird.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/views/add_bird.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/bird_details.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/views/bird_details.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/bird_list.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/views/bird_list.ejs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,7 +83,7 @@
       <workItem from="1684374116164" duration="620000" />
       <workItem from="1684445660673" duration="3876000" />
       <workItem from="1684462861219" duration="27000" />
-      <workItem from="1684462902009" duration="16936000" />
+      <workItem from="1684462902009" duration="21504000" />
     </task>
     <servers />
   </component>
