@@ -40,11 +40,11 @@
                             Identification</button>
 
                     </label>
-                    <img class="col-10" src="data:;base64,<%= sighting.img %>" alt="bird image" >
+                    <img class="col-10" style="max-height: 330px;" src="data:;base64,<%= sighting.img %>" alt="bird image" >
 
                     <div class="col-11 mt-3 border rounded h-50">
                         <div class="chatroom"
-                            style="display: flex; flex-direction: column; height: 80%; overflow: auto;">
+                            style="display: flex; flex-direction: column; height: 75%; overflow: auto;">
                             <div style="flex:1;">
                                 <div class="header font-weight-bold">Comment Area: </div>
                                 <div id="history"> <% sighting.comments.forEach(function(msg) { %>

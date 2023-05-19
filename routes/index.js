@@ -6,7 +6,7 @@ const path = require("path"); // get real file path for win/mac
 const fs = require("fs"); // get file & convert to base64
 const mime = require("mime"); // get file extension for validation
 
-// const Sighting = require("../models/sightings"); // Require the Sighting model
+const Sighting = require("../models/sightings"); // Require the Sighting model
 const fetch = require("node-fetch");
 const SPARQL_URL = "https://dbpedia.org/sparql";
 const mongoose = require("mongoose");
@@ -174,18 +174,13 @@ router.get("/nearby", async function (req, res) {
 // Recent bird route
 
 router.get("/recent", async function (req, res) {
-  try {
-    // Fetch all sightings from the database, sorted by dateTimeSeen
-    const sightings = await Sighting.find({}).sort({ dateTimeSeen: -1 });
 
-    // Render the bird_recent view with the fetched data
-    res.render("bird_recent", { title: "", sightings });
-  } catch (error) {
-    // print error message in the console
-    console.error(error);
-    // rendering error page with promopt
-    res.status(500).send("Error retrieving sightings from the database.");
-  }
+  // Fetch all sightings from the database, sorted by dateTimeSeen
+  const sightings = await Sighting.find({}).sort({ dateTimeSeen: -1 });
+
+  // Render the bird_recent view with the fetched data
+  res.render("bird_recent", { title: "", sightings });
+
 });
 
 router.get("/add_bird", function (req, res) {
