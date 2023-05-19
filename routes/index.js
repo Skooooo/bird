@@ -177,9 +177,10 @@ router.get("/recent", async function (req, res) {
 
   // Fetch all sightings from the database, sorted by dateTimeSeen
   const sightings = await Sighting.find({}).sort({ dateTimeSeen: -1 });
-
+  dbData.sort((a, b) => b.dateTimeSeen - a.dateTimeSeen);
+  console.log(dbData);
   // Render the bird_recent view with the fetched data
-  res.render("bird_recent", { title: "", sightings });
+  res.render("bird_recent", { title: "", sightings: dbData });
 
 });
 

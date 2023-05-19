@@ -15,14 +15,14 @@
             <div class="card-deck">
                 <% sightings.sort((a, b) => b.dateTimeSeen - a.dateTimeSeen).forEach(function(sighting) { %>
                 <div class="card cards mt-2" style="min-width: 30vh; max-width: 16rem;">
-                    <img class="card-img-top" src="<%= sighting.img %>" alt="bird image">
+                    <img class="card-img-top" src="data:;base64,<%= sighting.img %>" alt="bird image">
                     <div class="card-body">
                         <a class="card-title h5" style="color: black;" href="/sighting/<%= sighting._id %>">
                             <%= sighting.nickname %>
                         </a>
                         <div class="card-text">
-                            <p>Date and Time: <%= sighting.dateTimeSeen.toLocaleString() %></p>
-                            <p>Identification: <%= sighting.identification %></p>
+                            <p>Date and Time: <%= sighting?.dateTimeSeen?.toLocaleString() %></p>
+                            <p>Identification: <%= sighting?.identification %></p>
                         </div>
                     </div>
                 </div>

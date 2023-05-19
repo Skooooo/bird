@@ -19,7 +19,7 @@
                 <div id="length" hidden><%=sightings.length%></div>
                 <% for(var i=0; i<sightings.length; i++) { %>
                 <div class="card cards mt-2" style="min-width: 30vh; max-width: 16rem;" id="<%= sightings[i]._id %>">
-                    <img class="card-img-top" src="<%= sightings[i].img %>" alt="bird image">
+                    <img class="card-img-top" src="data:;base64,<%= sightings[i].img %>" alt="bird image">
                     <div class="card-body">
                         <a class="card-title h5" style="color: black;" href="/sighting/<%= sightings[i]._id %>">
                             <%= sightings[i].nickname %>
