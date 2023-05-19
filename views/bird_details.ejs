@@ -8,7 +8,7 @@
     <script src="/javascripts/chatroom.js"></script>
 
     <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <script src="http://maps.googleapis.com/maps/api/js">
     </script>
 
@@ -27,28 +27,28 @@
 
 
 <body style="display: flex; flex-direction: column; min-height: 100vh;"
-    onload="init('<%= sighting._id %>','<%= sighting.nickname %>')">
-    <%- include('../views/partials/header.ejs') %>
-    <div style="flex:1;">
+      onload="init('<%= sighting._id %>','<%= sighting.nickname %>')">
+      <%- include('../views/partials/header.ejs') %>
+      <div style="flex:1;">
         <div class="container mt-3">
             <div class="row">
                 <div class="justify-content-start col-6">
                     <label for="bird_name" class="col-9">
 
                         <button class="btn btn-primary"
-                            onclick="window.location.href='/sighting/<%= sighting._id %>/update'">Update
+                                onclick="window.location.href='/sighting/<%= sighting._id %>/update'">Update
                             Identification</button>
 
                     </label>
-                    <img class="col-10" src="<%= sighting.img %>" alt="bird image" style="height: 50vh;">
+                    <img class="col-10" src="data:;base64,<%= sighting.img %>" alt="bird image" >
 
                     <div class="col-11 mt-3 border rounded h-50">
                         <div class="chatroom"
-                            style="display: flex; flex-direction: column; height: 80%; overflow: auto;">
+                             style="display: flex; flex-direction: column; height: 80%; overflow: auto;">
                             <div style="flex:1;">
                                 <div class="header font-weight-bold">Comment Area: </div>
                                 <div id="history"> <% sighting.comments.forEach(function(msg) { %>
-                                    <p><%= msg.text %></p>
+                                        <p><%= msg.text %></p>
                                     <% }); %>
                                 </div>
                             </div>
@@ -59,9 +59,9 @@
                                     <label for="chat" class="col-form-label text-right font-weight-bold">Chat:</label>
                                     <div class="form-group row">
                                         <input type="text" class="col-sm-10 form-control" id="chat_input" name="chat"
-                                            required>
+                                               required>
                                         <button class="col-sm-2" type="submit" id="chat_send"
-                                            onclick="sendChatText()">Send</button>
+                                                onclick="sendChatText()">Send</button>
                                     </div>
                                 </div>
                             </form>
@@ -83,8 +83,8 @@
                             <h5 class="card-title">Location</h5>
                             <div id="address"></div>
                             <div class="card-text mt-2" id="map" style="height: 350px;"></div>
-                            <div class="card-text" id="lat" hidden><%=sighting.location.coordinates[1]%></div>
-                            <div class="card-text" id="lng" hidden><%=sighting.location.coordinates[0]%></div>
+                            <div class="card-text" id="lat" hidden><%=sighting?.location?.coordinates?.[1] || 123%></div>
+                            <div class="card-text" id="lng" hidden><%=sighting?.location?.coordinates?.[0] || 123%></div>
                             <script src="/javascripts/showMap.js"></script>
                         </div>
                     </div>
@@ -94,10 +94,10 @@
                             <h5 class="card-title">Description</h5>
                             <p class="card-text">
                                 <% if (sighting.birdInfo) { %>
-                                <p><%= sighting.birdInfo.description %></p>
-                                <% } else { %>
+                            <p><%= sighting.birdInfo.description %></p>
+                            <% } else { %>
                                 <p>No additional description available.</p>
-                                <% } %>
+                            <% } %>
                             </p>
                         </div>
                     </div>
@@ -107,24 +107,24 @@
                             <h5 class="card-title">Identification: <%= sighting.identification %></h5>
                             <p class="card-text">
                                 <% if (sighting.birdInfo) { %>
-                                <p><b>Name: </b><%= sighting.birdInfo.name %></p>
+                            <p><b>Name: </b><%= sighting.birdInfo.name %></p>
 
-                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                            <button type="button" class="btn btn-primary" data-toggle="modal"
                                     data-target="#moreinfo">More information</button>
 
-                                <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="moreInformation"
-                                    aria-hidden="true" id="moreinfo">
-                                    <div class="modal-dialog modal-xl" style="height: 80vh">
-                                        <div class="modal-content embed-responsive embed-responsive-16by9"
-                                            style="height: 100%;">
-                                            <iframe class="embed-responsive-item" src="<%= sighting.birdInfo.uri %>"
+                            <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="moreInformation"
+                                 aria-hidden="true" id="moreinfo">
+                                <div class="modal-dialog modal-xl" style="height: 80vh">
+                                    <div class="modal-content embed-responsive embed-responsive-16by9"
+                                         style="height: 100%;">
+                                        <iframe class="embed-responsive-item" src="<%= sighting.birdInfo.uri %>"
                                                 allowfullscreen></iframe>
-                                        </div>
                                     </div>
                                 </div>
-                                <% } else { %>
+                            </div>
+                            <% } else { %>
                                 <p>No additional information available.</p>
-                                <% } %>
+                            <% } %>
                             </p>
                         </div>
                     </div>
@@ -136,7 +136,7 @@
 
 
     <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAdBS-npR2OeE_5APc2d1tZph55N0TpGfY&callback=initMap&libraries=places">
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAdBS-npR2OeE_5APc2d1tZph55N0TpGfY&callback=initMap&libraries=places">
     </script>
 
 
