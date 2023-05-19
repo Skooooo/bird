@@ -61,6 +61,7 @@ db.once("close", () => {
 
 const Sightings = mongoose.model("sighting_lists", sightingSchema);
 let dbData = {};
+let data;
 /**
  * getting all entries from database
  */
@@ -90,22 +91,24 @@ const createEntry = async (params) => {
    * if the saving action is failed,
    * return false to render db_failed to initialize the process of saving data to offline database
    */
+  let res = true;
 
   sighting
-      .save()
-      .then(() => {
-        // 建议：不管是现在用 nodejs 还是之后用 react 或者 vue 用 JS 语言读未知参数
-        // 对象之后加一个?，这个时候如果你读不到，就不会报错了
-        console.log(params?.nickname, "has been successfully added to database");
-        saveFlag = true;
-        return true;
-      })
-      .catch((e) => {
-        console.error("error happened");
-        console.error(e);
-        return false;
-      });
-  // return false;
+    .save()
+    .then(() => {
+      // 建议：不管是现在用 nodejs 还是之后用 react 或者 vue 用 JS 语言读未知参数
+      // 对象之后加一个?，这个时候如果你读不到，就不会报错了
+      console.log(params?.nickname, "has been successfully added to database");
+      saveFlag = true;
+      return true;
+    })
+    .catch((e) => {
+      console.error("error happened");
+      console.error(e);
+      res = false;
+    });
+  return res;
+  //return false;
 };
 
 // Configure multer storage options
@@ -138,7 +141,10 @@ router.get("/", async function (req, res) {
     // Fetch all sightings from the database
     // const sightings = await Sighting.find({});
     // Render the sightings_list view with the fetched data
-    res.render("bird_list", { title: "", sightings: dbData });
+    res.render("bird_list", {
+      title: "",
+      sightings: dbData === {} ? [] : dbData,
+    });
   } catch (error) {
     // print error message in the console
     console.error(error);
@@ -318,32 +324,22 @@ router.get("/sighting/:id", async function (req, res, next) {
   // try {
   // retrieving sightingId from request params
   const sightingId = req.params.id;
-  console.warn("🚀 ~ file: index.js:321 ~ sightingId:", sightingId)
+  console.warn("🚀 ~ file: index.js:321 ~ sightingId:", sightingId);
   // searching entry from the database by id
   const sighting = await Sightings.findById(sightingId);
   if (sighting) {
     // transform bird speci name to html encode name
-    const birdName = encodeURIComponent(sighting?.identification || 'unspecific');
-    console.warn("🚀 ~ file: index.js:327 ~ birdName:", birdName)
+    const birdName = sighting?.identification;
+    console.warn("🚀 ~ file: index.js:327 ~ birdName:", birdName);
     // dbpedia query
-    const query = `
-        PREFIX dbo: <http://dbpedia.org/ontology/>
-        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-        PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-        SELECT ?label ?description ?uri WHERE {
-            ?uri a dbo:Bird .
-            ?uri dbo:abstract ?description ;
-                rdfs:label ?label .
-            ?uri foaf:isPrimaryTopicOf ?wikiPage .
-            FILTER (LANG(?label) = 'en' && LANG(?description) = 'en' && STRSTARTS(LCASE(?label), "${birdName.toLowerCase()}"))
-           }
-           LIMIT 1
-            `;
+    const query = `SELECT * WHERE { 
+      <http://dbpedia.org/resource/${birdName}>         
+      dbo:abstract ?abstract.
+      FILTER (langMatches(lang(?abstract), "en"))
+      }`;
     // retrieving data ftom dbpedia url as json format
-    const url = `${SPARQL_URL}?query=${encodeURIComponent(
-        query
-    )}&format=json`;
-    console.warn("🚀 ~ file: index.js:346 ~ url:", url)
+    const url = `${SPARQL_URL}?query=${encodeURIComponent(query)}&format=json`;
+    console.warn("🚀 ~ file: index.js:346 ~ url:", url);
     // retrieving data from dbpedia
     const response = await fetch(url);
     // retrieving data from response
@@ -352,12 +348,12 @@ router.get("/sighting/:id", async function (req, res, next) {
     if (data.results.bindings.length > 0) {
       // retrieving from bindings index 0
       const birdInfo = data.results.bindings[0];
-      console.warn("🚀 ~ file: index.js:353 ~ birdInfo:", birdInfo)
+      console.warn("🚀 ~ file: index.js:353 ~ birdInfo:", birdInfo);
       // creating an object base on the information from dbpedia
       sighting.birdInfo = {
-        name: birdInfo.label.value,
-        description: birdInfo.description.value,
-        uri: birdInfo.uri.value,
+        name: birdName,
+        description: birdInfo.abstract.value,
+        uri: "",
       };
     }
     // render page baseon the object just created
