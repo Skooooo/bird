@@ -13,7 +13,7 @@ const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Types;
 // connect to our mangoDB via url link & username with password
 const uri =
-    "mongodb+srv://yjiao12:zhx02180218@cluster0.zhhlids.mongodb.net/bird_master";
+  "mongodb+srv://yjiao12:zhx02180218@cluster0.zhhlids.mongodb.net/bird_master";
 const Schema = mongoose.Schema;
 // Define a new schema for comments
 const commentSchema = new Schema({
@@ -92,21 +92,24 @@ const createEntry = async (params) => {
    * return false to render db_failed to initialize the process of saving data to offline database
    */
 
-  //return false
+  // return false
+
   let res = true;
 
+
   sighting
-      .save()
-      .then(() => {
-        console.log(params?.nickname, "has been successfully added to database");
-        saveFlag = true;
-        res = true;
-      })
-      .catch((e) => {
-        console.error("error happened");
-        console.error(e);
-        res = false;
-      });
+    .save()
+    .then(() => {
+
+      console.log(params?.nickname, "has been successfully added to database");
+      saveFlag = true;
+      res = true;
+    })
+    .catch((e) => {
+      console.error("error happened");
+      console.error(e);
+      res = false;
+    });
   return res;
 };
 
@@ -115,7 +118,6 @@ var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "public/uploads/");
   },
-  // image name
   filename: function (req, file, cb) {
     // Get the original image name, i.e. what the image was called when the user uploaded it
     var original = file.originalname;
@@ -172,18 +174,18 @@ router.get("/nearby", async function (req, res) {
 // Recent bird route
 
 router.get("/recent", async function (req, res) {
-  // try {
-  //   // Fetch all sightings from the database, sorted by dateTimeSeen
-  //   const sightings = await Sighting.find({}).sort({ dateTimeSeen: -1 });
-  //
-  //   // Render the bird_recent view with the fetched data
-  //   res.render("bird_recent", { title: "", sightings });
-  // } catch (error) {
-  //   // print error message in the console
-  //   console.error(error);
-  //   // rendering error page with promopt
-  //   res.status(500).send("Error retrieving sightings from the database.");
-  // }
+  try {
+    // Fetch all sightings from the database, sorted by dateTimeSeen
+    const sightings = await Sighting.find({}).sort({ dateTimeSeen: -1 });
+
+    // Render the bird_recent view with the fetched data
+    res.render("bird_recent", { title: "", sightings });
+  } catch (error) {
+    // print error message in the console
+    console.error(error);
+    // rendering error page with promopt
+    res.status(500).send("Error retrieving sightings from the database.");
+  }
 });
 
 router.get("/add_bird", function (req, res) {
@@ -439,15 +441,15 @@ router.post("/message", async function (req, res) {
   console.log("objectId: ", convertedObjectId);
   const comment = { text: req.body.message };
   Sighting.updateOne(
-      { _id: convertedObjectId },
-      { $push: { comments: comment } }
+    { _id: convertedObjectId },
+    { $push: { comments: comment } }
   )
-      .then(() => {
-        console.log("Array updated successfully");
-      })
-      .catch((error) => {
-        console.error("Error updating array:", error);
-      });
+    .then(() => {
+      console.log("Array updated successfully");
+    })
+    .catch((error) => {
+      console.error("Error updating array:", error);
+    });
 });
 
 //get knowledge graph
@@ -471,16 +473,16 @@ router.get("/sighting/:id", function (req, res, next) {
   // retrieving data from dbpedia
   // if the data returned, render the page sighting
   fetch(url)
-      .then((response) => response.json())
-      .then((data) => {
-        // Extract the bird information from the data...
-        const bird = data.results.bindings[0];
-        res.render("sighting", {
-          title: "Sighting",
-          sighting: sighting,
-          bird: bird,
-        });
+    .then((response) => response.json())
+    .then((data) => {
+      // Extract the bird information from the data...
+      const bird = data.results.bindings[0];
+      res.render("sighting", {
+        title: "Sighting",
+        sighting: sighting,
+        bird: bird,
       });
+    });
 });
 
 module.exports = router;

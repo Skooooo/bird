@@ -25,10 +25,10 @@
                             <%= sightings[i].nickname %>
                         </a>
                         <div class="card-text">
-                            <p>Date and Time: <%= sightings[i].dateTimeSeen.toLocaleString() %></p>
+                            <p>Date and Time: <%= sightings[i]?.dateTimeSeen?.toLocaleString() %></p>
                             <p>Identification: <%= sightings[i].identification %></p>
-                            <p id="lat<%=i%>" hidden><%=sightings[i].location.coordinates[1]%></p>
-                            <p id="lng<%=i%>" hidden><%=sightings[i].location.coordinates[0]%></p>
+                            <p id="lat<%=i%>" hidden><%=sightings[i]?.location?.coordinates?.[1]%></p>
+                            <p id="lng<%=i%>" hidden><%=sightings[i]?.location?.coordinates?.[0]%></p>
                             <p id="id<%=i%>" hidden><%= sightings[i]._id %></p>
                             <p id="dis<%=i%>" hidden></p>
                         </div>

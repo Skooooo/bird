@@ -1,130 +1,128 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title><%= title %></title>
-  <link rel="stylesheet" href="/stylesheets/style.css" />
+  <head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
 
-  <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-  />
-</head>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
+  </head>
 
-<body style="display: flex; flex-direction: column; min-height: 100vh">
-<%- include('../views/partials/header.ejs') %>
-<div style="flex: 1">
-  <div class="container mt-3">
-    <div class="card-deck">
-      <% sightings.forEach(function(sighting) { %>
-        <div
-                class="card cards mt-2"
-                style="min-width: 30vh; max-width: 16rem"
-        >
-          <img
-                  class="card-img-top"
-                  src="data:;base64,<%= sighting.img %>"
-                  alt="bird image"
-          />
-          <div class="card-body">
-            <a
-                    class="card-title h5"
-                    style="color: black"
-                    href="/sighting/<%= sighting._id %>"
-            >
-              <%= sighting.nickname %>
-            </a>
-            <div class="card-text">
-              <p>
-                Date and Time: <%= sighting?.dateTimeSeen?.toLocaleString() ||
-                "unspecific" %>
-              </p>
-              <p>
-                Identification: <%= sighting?.identification || "unknown" %>
-              </p>
+  <body style="display: flex; flex-direction: column; min-height: 100vh">
+    <%- include('../views/partials/header.ejs') %>
+    <div style="flex: 1">
+      <div class="container mt-3">
+        <div class="card-deck">
+          <% sightings.forEach(function(sighting) { %>
+          <div
+            class="card cards mt-2"
+            style="min-width: 30vh; max-width: 16rem"
+          >
+            <img
+              class="card-img-top"
+              src="data:;base64,<%= sighting.img %>"
+              alt="bird image"
+            />
+            <div class="card-body">
+              <a
+                class="card-title h5"
+                style="color: black"
+                href="/sighting/<%= sighting._id %>"
+              >
+                <%= sighting.nickname %>
+              </a>
+              <div class="card-text">
+                <p>
+                  Date and Time: <%= sighting?.dateTimeSeen?.toLocaleString() ||
+                  "unspecific" %>
+                </p>
+                <p>
+                  Identification: <%= sighting?.identification || "unknown" %>
+                </p>
+              </div>
             </div>
           </div>
+          <% }); %>
         </div>
-      <% }); %>
+      </div>
     </div>
-  </div>
-</div>
-<%- include('../views/partials/footer.ejs') %>
+    <%- include('../views/partials/footer.ejs') %>
 
-<script>
-  let db;
+    <script>
+      let db;
 
-  const requestIndexedDB = window.indexedDB.open("sighting_list");
+      const requestIndexedDB = window.indexedDB.open("sighting_list");
 
-  requestIndexedDB.onerror = (event) => {
-    console.error("error detected", event);
-  };
+      requestIndexedDB.onerror = (event) => {
+        console.error("error detected", event);
+      };
 
-  // If there is an offline database and it opens, there is data in it
-  requestIndexedDB.onsuccess = (event) => {
-    var db = event.target.result;
+      // If there is an offline database and it opens, there is data in it
+      requestIndexedDB.onsuccess = (event) => {
+        var db = event.target.result;
 
-    var transaction = db.transaction(["list"], "readwrite");
+        var transaction = db.transaction(["list"], "readwrite");
 
-    var objectStore = transaction.objectStore("list");
+        var objectStore = transaction.objectStore("list");
 
-    // Here we use Pointers to read the key and value from the database
-    var lowerBoundOpenKeyRange = IDBKeyRange.lowerBound(1, false);
-    var request = objectStore.openCursor(
-            lowerBoundOpenKeyRange,
-            IDBCursor.PREV
-    );
+        // Here is a pointer to read your key and value from the database
+        var lowerBoundOpenKeyRange = IDBKeyRange.lowerBound(1, false);
+        var request = objectStore.openCursor(
+          lowerBoundOpenKeyRange,
+          IDBCursor.PREV
+        );
 
-    request.onsuccess = (event) => {
-      var cursor = event.target.result;
-      if (cursor) {
-        // Object.assign is used to avoid console printing errors
-        console.log(Object.assign(cursor.value));
-        doFormRequest(cursor.value);
-        cursor.continue();
+        request.onsuccess = (event) => {
+          var cursor = event.target.result;
+          if (cursor) {
+            // Object.assign is used to avoid console printing errors
+            console.log(Object.assign(cursor.value));
+            doFormRequest(cursor.value);
+            cursor.continue();
+          }
+
+          // after submitting the form, then we can delete the offline database
+          objectStore.delete("list");
+          indexedDB.deleteDatabase("sighting_list");
+
+        };
+
+        request.onerror = (event) => {
+          // false dealing!
+        };
+      };
+
+      // This method creates a virtual form element and fills it in,
+      // Finally call the post method to save the database directly to the online link
+      function doFormRequest(json) {
+        var form = document.createElement("form");
+        form.action = "/add";
+        form.method = "post";
+
+        // append input attribute and valus
+
+        for (var key in json) {
+          if (json.hasOwnProperty(key)) {
+            var val = json[key];
+            input = document.createElement("input");
+            input.type = "hidden";
+            input.name = key;
+            input.value = val;
+
+            // append key-value to form
+            form.appendChild(input);
+          }
+        }
+
+        // send post request
+        document.body.appendChild(form);
+        form.submit();
+
+        // remove form from document
+        document.body.removeChild(form);
       }
-
-      // after submitting the form, then we can delete the offline database
-      objectStore.delete("list");
-      indexedDB.deleteDatabase("sighting_list");
-
-
-    };
-
-    request.onerror = (event) => {
-      // Error handling!
-    };
-  };
-
-  // This method creates a virtual form element and fills it in,
-  // Finally call the post method to save the database directly to the online link
-  function doFormRequest(json) {
-    var form = document.createElement("form");
-    form.action = "/add";
-    form.method = "post";
-
-    // append input attribute and valus
-    for (var key in json) {
-      if (json.hasOwnProperty(key)) {
-        var val = json[key];
-        input = document.createElement("input");
-        input.type = "hidden";
-        input.name = key;
-        input.value = val;
-
-        // append key-value to form
-        form.appendChild(input);
-      }
-    }
-
-    // send post request
-    document.body.appendChild(form);
-    // submit form
-    form.submit();
-
-    // remove form from document
-    // delete elements
-    document.body.removeChild(form);
-  }
-</script>
-</body>
+    </script>
+  </body>
 </html>
