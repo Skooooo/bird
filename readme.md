@@ -54,3 +54,6 @@ The following sections will guide you on how to set up the project locally.
 npm install && npm run start
 
 open the browser and type : localhost:3000
+
+
+## Github: https://github.com/Skooooo/bird.git
